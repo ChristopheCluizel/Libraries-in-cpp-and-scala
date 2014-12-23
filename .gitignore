@@ -1,4 +1,4 @@
 *.so
 *.class
-./C++/Point2D/doc/
-./scala/Graph/lib/
+C++/Point2D/doc/*
+scala/Graph/lib/*
