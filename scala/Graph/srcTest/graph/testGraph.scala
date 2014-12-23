@@ -41,7 +41,7 @@ class testGraph extends FlatSpec with Matchers {
         graph.edgePresent(1, 0) should be (false)
     }
 
-    it should "get the successors" in {
+    it should "get the successors in oriented graph" in {
         var successors = graph.getSuccessors(2)
         successors.contains(0) should be (true)
         successors.contains(3) should be (true)
@@ -49,12 +49,74 @@ class testGraph extends FlatSpec with Matchers {
         successors.contains(1) should be (false)
     }
 
-    it should "get the predecessors" in {
+    it should "get the successors in non-oriented graph" in {
+        var graph = new Graph[Int](10)
+        graph.addNode(0, 0)
+        graph.addNode(1, 1)
+        graph.addNode(2, 2)
+        graph.addNode(3, 3)
+
+        graph.addEdge(0, 1, 1)
+        graph.addEdge(1, 2, 1)
+        graph.addEdge(2, 3, 1)
+        graph.addEdge(2, 0, 1)
+
+        graph.addEdge(1, 0, 1)
+        graph.addEdge(2, 1, 1)
+        graph.addEdge(3, 2, 1)
+        graph.addEdge(0, 2, 1)
+        var successors = graph.getSuccessors(2)
+        successors.contains(0) should be (true)
+        successors.contains(3) should be (true)
+        successors.contains(2) should be (false)
+        successors.contains(1) should be (true)
+    }
+
+    it should "get the predecessors in oriented graph" in {
+                var graph = new Graph[Int](10)
+        graph.addNode(0, 0)
+        graph.addNode(1, 1)
+        graph.addNode(2, 2)
+        graph.addNode(3, 3)
+
+        graph.addEdge(0, 1, 1)
+        graph.addEdge(1, 2, 1)
+        graph.addEdge(2, 3, 1)
+        graph.addEdge(2, 0, 1)
+
         var predecessors = graph.getPredecessors(2)
         predecessors.contains(1) should be (true)
         predecessors.contains(0) should be (false)
         predecessors.contains(2) should be (false)
         predecessors.contains(3) should be (false)
+    }
+
+    it should "get the predecessors in non-oriented graph" in {
+                var graph = new Graph[Int](10)
+        graph.addNode(0, 0)
+        graph.addNode(1, 1)
+        graph.addNode(2, 2)
+        graph.addNode(3, 3)
+        graph.addNode(4, 4)
+
+        graph.addEdge(0, 1, 1)
+        graph.addEdge(1, 2, 1)
+        graph.addEdge(2, 3, 1)
+        graph.addEdge(2, 0, 1)
+        graph.addEdge(3, 4, 1)
+
+        graph.addEdge(1, 0, 1)
+        graph.addEdge(2, 1, 1)
+        graph.addEdge(3, 2, 1)
+        graph.addEdge(0, 2, 1)
+        graph.addEdge(4, 0, 3)
+
+        var predecessors = graph.getPredecessors(2)
+        predecessors.contains(1) should be (true)
+        predecessors.contains(0) should be (true)
+        predecessors.contains(2) should be (false)
+        predecessors.contains(3) should be (true)
+        predecessors.contains(4) should be (false)
     }
 
     it should "breadth-first search" in {
@@ -76,6 +138,48 @@ class testGraph extends FlatSpec with Matchers {
         graphBreadthFirstSearch.addEdge(2, 6, 1)
         graphBreadthFirstSearch.addEdge(5, 7, 1)
         graphBreadthFirstSearch.breadthFirstSearch(0) should be ("0, 1, 2, 3, 4, 5, 6, 7")
+    }
+
+    it should "find the eccentricity" in {
+        var graphFindEccentricity = new Graph[Int](8)
+        graphFindEccentricity.addNode(0, 0)
+        graphFindEccentricity.addNode(1, 1)
+        graphFindEccentricity.addNode(2, 2)
+        graphFindEccentricity.addNode(3, 3)
+        graphFindEccentricity.addNode(4, 4)
+        graphFindEccentricity.addNode(5, 5)
+        graphFindEccentricity.addNode(6, 6)
+        graphFindEccentricity.addNode(7, 7)
+
+        graphFindEccentricity.addEdge(0, 1, 1)
+        graphFindEccentricity.addEdge(0, 2, 1)
+        graphFindEccentricity.addEdge(0, 3, 1)
+        graphFindEccentricity.addEdge(1, 4, 1)
+        graphFindEccentricity.addEdge(1, 5, 1)
+        graphFindEccentricity.addEdge(2, 5, 1)
+        graphFindEccentricity.addEdge(2, 6, 1)
+        graphFindEccentricity.addEdge(5, 7, 1)
+
+        graphFindEccentricity.addEdge(1, 0, 1)
+        graphFindEccentricity.addEdge(2, 0, 1)
+        graphFindEccentricity.addEdge(3, 0, 1)
+        graphFindEccentricity.addEdge(4, 1, 1)
+        graphFindEccentricity.addEdge(5, 1, 1)
+        graphFindEccentricity.addEdge(5, 2, 1)
+        graphFindEccentricity.addEdge(6, 2, 1)
+        graphFindEccentricity.addEdge(7, 5, 1)
+
+        val (key, eccentricity) = graphFindEccentricity.calculateEccentricityOf(2)
+        key should be (2)
+        eccentricity should be (3)
+
+        val (key1, eccentricity1) = graphFindEccentricity.calculateEccentricityOf(3)
+        key1 should be (3)
+        eccentricity1 should be (4)
+
+        val (key2, eccentricity2) = graphFindEccentricity.calculateEccentricityOf(6)
+        key2 should be (6)
+        eccentricity2 should be (4)
     }
 
 }

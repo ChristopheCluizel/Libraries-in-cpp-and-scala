@@ -4,6 +4,7 @@ import math._
 import scala.util._
 import Array._
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable
 
 class Graph[X](nbNodes: Int) {
     var nodes: Map[Int, X] = Map()
@@ -51,6 +52,29 @@ class Graph[X](nbNodes: Int) {
         }
         listNodesVisited = listNodesVisited.dropRight(2)
         listNodesVisited
+    }
+
+    def calculateEccentricityOf(key: Int): (Int, Int) = {
+        var queue = new scala.collection.mutable.Queue[Int]
+        var markedNode: ArrayBuffer[Int] = ArrayBuffer()
+        var actualNodeKey = 0
+        var listNodesVisited = ""
+        var eccentricity = 0
+        var distances: scala.collection.mutable.Map[Int, Int] = scala.collection.mutable.Map()
+
+        nodes.keys.foreach(i => distances += (i -> -1))
+
+        distances.update(key, 0)
+        queue += key
+        while(!queue.isEmpty) {
+            actualNodeKey = queue.dequeue
+            for(i <- getSuccessors(actualNodeKey)) if(distances(i) == -1) {
+                queue += i
+                distances.update(i, distances(actualNodeKey) + 1)
+                eccentricity = distances(i)
+            }
+        }
+        (key, eccentricity)
     }
 
     def display = nodes.keys.foreach {i =>
