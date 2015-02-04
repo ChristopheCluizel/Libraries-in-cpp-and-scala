@@ -8,30 +8,30 @@ import scala.collection.mutable
 
 class Graph[X](nbNodes: Int) {
     var nodes: Map[Int, X] = Map()
-    var adjacenceMatrix = ofDim[Boolean](nbNodes, nbNodes)
+    var adjacenceMatrix = ofDim[Int](nbNodes, nbNodes)
 
     for(i <- 0 until nbNodes) {
         for(j <- 0 until nbNodes) {
-            adjacenceMatrix(i)(j) = false
+            adjacenceMatrix(i)(j) = 0
         }
     }
 
     def addNode(key: Int, node: X) = nodes += (key -> node)
-    def addEdge(key1 :Int, key2:Int) = adjacenceMatrix(key1)(key2) = true
+    def addEdge(key1 :Int, key2:Int, value: Int) = adjacenceMatrix(key1)(key2) = value
     def isEmpty: Boolean = nodes.isEmpty
     def nodePresent(key: Int): Boolean = nodes.contains(key)
-    def edgePresent(key1: Int, key2: Int): Boolean = adjacenceMatrix(key1)(key2) == true
+    def edgePresent(key1: Int, key2: Int): Boolean = adjacenceMatrix(key1)(key2) > 0
     def getPredecessors(key: Int): ArrayBuffer[Int] = {
         var predecessors: ArrayBuffer[Int] = ArrayBuffer()
         for(i <- 0 until nbNodes) {
-            if(adjacenceMatrix(i)(key)) predecessors += i
+            if(adjacenceMatrix(i)(key) > 0) predecessors += i
         }
         predecessors
     }
     def getSuccessors(key: Int): ArrayBuffer[Int] = {
         var successors: ArrayBuffer[Int] = ArrayBuffer()
         for(j <- 0 until nbNodes) {
-            if(adjacenceMatrix(key)(j)) successors += j
+            if(adjacenceMatrix(key)(j) > 0) successors += j
         }
         successors
     }
