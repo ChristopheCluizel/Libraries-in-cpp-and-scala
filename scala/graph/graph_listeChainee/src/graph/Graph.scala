@@ -7,34 +7,27 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable
 
 class Graph[X](nbNodes: Int) {
-    var nodes: Map[Int, X] = Map()
-    var adjacenceMatrix = ofDim[Int](nbNodes, nbNodes)
+    var adjacence: Map[Int, ArrayBuffer[Int]] = Map()
 
-    for(i <- 0 until nbNodes) {
-        for(j <- 0 until nbNodes) {
-            adjacenceMatrix(i)(j) = 0
-        }
+    def addNode(key: Int, node: X) = {
+        adjacence += (key -> new ArrayBuffer())
     }
-
-    def addNode(key: Int, node: X) = nodes += (key -> node)
-    def addEdge(key1 :Int, key2:Int, value: Int) = adjacenceMatrix(key1)(key2) = value
-    def isEmpty: Boolean = nodes.isEmpty
-    def nodePresent(key: Int): Boolean = nodes.contains(key)
-    def edgePresent(key1: Int, key2: Int): Boolean = adjacenceMatrix(key1)(key2) > 0
+    def addEdge(key1 :Int, key2:Int, value: Int) = {
+        adjacence(key1) += (key2)
+    }
+    def isEmpty: Boolean = adjacence.isEmpty
+    def nodePresent(key: Int): Boolean = adjacence.contains(key)
+    def edgePresent(key1: Int, key2: Int): Boolean = adjacence(key1).contains(key2)
     def getPredecessors(key: Int): ArrayBuffer[Int] = {
         var predecessors: ArrayBuffer[Int] = ArrayBuffer()
-        for(i <- 0 until nbNodes) {
-            if(adjacenceMatrix(i)(key) > 0) predecessors += i
+        for(i <- 0 until adjacence.size) {
+            if(adjacence(i).contains(key)) {
+                predecessors += i
+            }
         }
         predecessors
     }
-    def getSuccessors(key: Int): ArrayBuffer[Int] = {
-        var successors: ArrayBuffer[Int] = ArrayBuffer()
-        for(j <- 0 until nbNodes) {
-            if(adjacenceMatrix(key)(j) > 0) successors += j
-        }
-        successors
-    }
+    def getSuccessors(key: Int): ArrayBuffer[Int] = adjacence(key)
 
     def breadthFirstSearch(key: Int): String = {
         var queue = new scala.collection.mutable.Queue[Int]
@@ -62,7 +55,7 @@ class Graph[X](nbNodes: Int) {
         var eccentricity = 0
         var distances: scala.collection.mutable.Map[Int, Int] = scala.collection.mutable.Map()
 
-        nodes.keys.foreach(i => distances += (i -> -1))
+        adjacence.keys.foreach(i => distances += (i -> -1))
 
         distances.update(key, 0)
         queue += key
@@ -77,7 +70,9 @@ class Graph[X](nbNodes: Int) {
         (key, eccentricity)
     }
 
-    def display = nodes.keys.foreach {i =>
-        println("key : " + i + ", Node : " + nodes(i).toString + ", Successors : " + getSuccessors(i).mkString(", ") + ", Predecessors : " + getPredecessors(i).mkString(", "))
+    def display = adjacence.keys.foreach {i =>
+        println("key : " + i + ", Node : " + adjacence(i).toString +
+                ", Successors : " + getSuccessors(i).mkString(", ") +
+                ", Predecessors : " + getPredecessors(i).mkString(", "))
     }
 }

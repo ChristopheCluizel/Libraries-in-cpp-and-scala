@@ -15,13 +15,11 @@ class testGraph extends FlatSpec with Matchers {
     graph.addEdge(2, 0, 1)
 
     "A Graph" should "add nodes" in {
-        graph.nodes(0) should be (0)
-        graph.nodes(1) should be (1)
+        graph.adjacence(0).isEmpty should be (false)
     }
 
     it should "add edges" in {
-        graph.adjacenceMatrix(0)(1) should be (1)
-        graph.adjacenceMatrix(2)(3) should be (1)
+        graph.adjacence(0)(0) should be (1)
     }
 
     it should "indicate if empty" in {
@@ -73,7 +71,7 @@ class testGraph extends FlatSpec with Matchers {
     }
 
     it should "get the predecessors in oriented graph" in {
-                var graph = new Graph[Int](10)
+        var graph = new Graph[Int](10)
         graph.addNode(0, 0)
         graph.addNode(1, 1)
         graph.addNode(2, 2)
@@ -92,7 +90,7 @@ class testGraph extends FlatSpec with Matchers {
     }
 
     it should "get the predecessors in non-oriented graph" in {
-                var graph = new Graph[Int](10)
+        var graph = new Graph[Int](10)
         graph.addNode(0, 0)
         graph.addNode(1, 1)
         graph.addNode(2, 2)
@@ -181,5 +179,4 @@ class testGraph extends FlatSpec with Matchers {
         key2 should be (6)
         eccentricity2 should be (4)
     }
-
 }
