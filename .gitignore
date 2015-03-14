@@ -1,4 +1,4 @@
 *.so
 *.class
-C++/Point2D/doc/*
+c++_libraries/doc/
 *.jar
