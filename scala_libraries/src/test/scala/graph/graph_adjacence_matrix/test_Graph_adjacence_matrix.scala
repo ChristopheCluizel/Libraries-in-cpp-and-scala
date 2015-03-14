@@ -1,8 +1,8 @@
-package graph
+package graph.graph_adjacence_matrix
 
 import org.scalatest._
 
-class testGraph extends FlatSpec with Matchers {
+class test_Graph_adjacence_matrix extends FlatSpec with Matchers {
 
     var graph = new Graph[Int](10)
     graph.addNode(0, 0)

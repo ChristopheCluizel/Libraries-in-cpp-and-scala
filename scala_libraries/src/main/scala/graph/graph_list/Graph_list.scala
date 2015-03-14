@@ -1,4 +1,4 @@
-package graph
+package graph.graph_list
 
 import math._
 import scala.util._
