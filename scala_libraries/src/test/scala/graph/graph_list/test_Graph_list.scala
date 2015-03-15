@@ -4,22 +4,50 @@ import org.scalatest._
 
 class test_Graph_list extends FlatSpec with Matchers {
 
-    var graph = new Graph[Int](10)
-    graph.addNode(0, 0)
-    graph.addNode(1, 1)
-    graph.addNode(2, 2)
-    graph.addNode(3, 3)
-    graph.addEdge(0, 1, 1)
-    graph.addEdge(1, 2, 1)
-    graph.addEdge(2, 3, 1)
-    graph.addEdge(2, 0, 1)
+    def fixture_oriented_graph = new {
+      val oriented_graph = new Graph[Int](10)
+      oriented_graph.addNode(0, 0)
+      oriented_graph.addNode(1, 1)
+      oriented_graph.addNode(2, 2)
+      oriented_graph.addNode(3, 3)
+      oriented_graph.addEdge(0, 1, 1)
+      oriented_graph.addEdge(1, 2, 1)
+      oriented_graph.addEdge(2, 3, 1)
+      oriented_graph.addEdge(2, 0, 1)
+    }
 
-    "A Graph" should "add nodes" in {
-        graph.adjacence(0).isEmpty should be (false)
+    def fixture_non_oriented_graph = new {
+      val non_oriented_graph = new Graph[Int](10)
+      non_oriented_graph.addNode(0, 0)
+      non_oriented_graph.addNode(1, 1)
+      non_oriented_graph.addNode(2, 2)
+      non_oriented_graph.addNode(3, 3)
+
+      non_oriented_graph.addEdge(0, 1, 1)
+      non_oriented_graph.addEdge(1, 2, 1)
+      non_oriented_graph.addEdge(2, 3, 1)
+      non_oriented_graph.addEdge(2, 0, 1)
+
+      non_oriented_graph.addEdge(1, 0, 1)
+      non_oriented_graph.addEdge(2, 1, 1)
+      non_oriented_graph.addEdge(3, 2, 1)
+      non_oriented_graph.addEdge(0, 2, 1)
+    }
+
+    "A oriented Graph" should "add nodes" in {
+      val oriented_graph = new Graph[Int](5)
+      oriented_graph.adjacence.size should be (0)
+      oriented_graph.addNode(2, 2)
+      oriented_graph.adjacence.size should be (1)
+      oriented_graph.nodes(2) should be (2)
     }
 
     it should "add edges" in {
-        graph.adjacence(0)(0) should be (1)
+        val oriented_graph = new Graph[Int](5)
+        oriented_graph.addNode(1, 1)
+        oriented_graph.addNode(2, 2)
+        oriented_graph.addEdge(1, 2, 1)
+        oriented_graph.adjacence(1)(0) should be (2)
     }
 
     it should "indicate if empty" in {
@@ -30,91 +58,75 @@ class test_Graph_list extends FlatSpec with Matchers {
     }
 
     it should "indicate if node present" in {
-        graph.nodePresent(1) should be (true)
-        graph.nodePresent(4) should be (false)
+        val f = fixture_oriented_graph
+        f.oriented_graph.adjacence.size should be (4)
+        f.oriented_graph.nodePresent(0) should be (true)
+        f.oriented_graph.nodePresent(1) should be (true)
+        f.oriented_graph.nodePresent(2) should be (true)
+        f.oriented_graph.nodePresent(3) should be (true)
+        f.oriented_graph.nodePresent(4) should be (false)
     }
 
     it should "indicate if edge present" in {
-        graph.edgePresent(0, 1) should be (true)
-        graph.edgePresent(1, 0) should be (false)
+        val f = fixture_oriented_graph
+        f.oriented_graph.edgePresent(0, 1) should be (true)
+        f.oriented_graph.edgePresent(1, 2) should be (true)
+        f.oriented_graph.edgePresent(2, 0) should be (true)
+        f.oriented_graph.edgePresent(2, 3) should be (true)
+        f.oriented_graph.edgePresent(1, 0) should be (false)
     }
 
-    it should "get the successors in oriented graph" in {
-        var successors = graph.getSuccessors(2)
-        successors.contains(0) should be (true)
-        successors.contains(3) should be (true)
-        successors.contains(2) should be (false)
-        successors.contains(1) should be (false)
+    it should "get the successors" in {
+        val f = fixture_oriented_graph
+
+        val successorsOfZero = f.oriented_graph.getSuccessors(0)
+        successorsOfZero.contains(0) should be (false)
+        successorsOfZero.contains(1) should be (true)
+        successorsOfZero.contains(2) should be (false)
+        successorsOfZero.contains(3) should be (false)
+
+        val successorsOfOne = f.oriented_graph.getSuccessors(1)
+        successorsOfOne.contains(0) should be (false)
+        successorsOfOne.contains(1) should be (false)
+        successorsOfOne.contains(2) should be (true)
+        successorsOfOne.contains(3) should be (false)
+
+        val successorsOfTwo = f.oriented_graph.getSuccessors(2)
+        successorsOfTwo.contains(0) should be (true)
+        successorsOfTwo.contains(3) should be (true)
+        successorsOfTwo.contains(2) should be (false)
+        successorsOfTwo.contains(1) should be (false)
+
+        val successorsOfThree = f.oriented_graph.getSuccessors(3)
+        successorsOfThree.isEmpty should be (true)
     }
 
-    it should "get the successors in non-oriented graph" in {
-        var graph = new Graph[Int](10)
-        graph.addNode(0, 0)
-        graph.addNode(1, 1)
-        graph.addNode(2, 2)
-        graph.addNode(3, 3)
+    it should "get the predecessors" in {
+        val f = fixture_oriented_graph
 
-        graph.addEdge(0, 1, 1)
-        graph.addEdge(1, 2, 1)
-        graph.addEdge(2, 3, 1)
-        graph.addEdge(2, 0, 1)
+        val predecessorsOfZero = f.oriented_graph.getPredecessors(0)
+        predecessorsOfZero.contains(0) should be (false)
+        predecessorsOfZero.contains(1) should be (false)
+        predecessorsOfZero.contains(2) should be (true)
+        predecessorsOfZero.contains(3) should be (false)
 
-        graph.addEdge(1, 0, 1)
-        graph.addEdge(2, 1, 1)
-        graph.addEdge(3, 2, 1)
-        graph.addEdge(0, 2, 1)
-        var successors = graph.getSuccessors(2)
-        successors.contains(0) should be (true)
-        successors.contains(3) should be (true)
-        successors.contains(2) should be (false)
-        successors.contains(1) should be (true)
-    }
+        val predecessorsOfOne = f.oriented_graph.getPredecessors(1)
+        predecessorsOfOne.contains(0) should be (true)
+        predecessorsOfOne.contains(1) should be (false)
+        predecessorsOfOne.contains(2) should be (false)
+        predecessorsOfOne.contains(3) should be (false)
 
-    it should "get the predecessors in oriented graph" in {
-        var graph = new Graph[Int](10)
-        graph.addNode(0, 0)
-        graph.addNode(1, 1)
-        graph.addNode(2, 2)
-        graph.addNode(3, 3)
+        val predecessorsOfTwo = f.oriented_graph.getPredecessors(2)
+        predecessorsOfTwo.contains(0) should be (false)
+        predecessorsOfTwo.contains(1) should be (true)
+        predecessorsOfTwo.contains(2) should be (false)
+        predecessorsOfTwo.contains(3) should be (false)
 
-        graph.addEdge(0, 1, 1)
-        graph.addEdge(1, 2, 1)
-        graph.addEdge(2, 3, 1)
-        graph.addEdge(2, 0, 1)
-
-        var predecessors = graph.getPredecessors(2)
-        predecessors.contains(1) should be (true)
-        predecessors.contains(0) should be (false)
-        predecessors.contains(2) should be (false)
-        predecessors.contains(3) should be (false)
-    }
-
-    it should "get the predecessors in non-oriented graph" in {
-        var graph = new Graph[Int](10)
-        graph.addNode(0, 0)
-        graph.addNode(1, 1)
-        graph.addNode(2, 2)
-        graph.addNode(3, 3)
-        graph.addNode(4, 4)
-
-        graph.addEdge(0, 1, 1)
-        graph.addEdge(1, 2, 1)
-        graph.addEdge(2, 3, 1)
-        graph.addEdge(2, 0, 1)
-        graph.addEdge(3, 4, 1)
-
-        graph.addEdge(1, 0, 1)
-        graph.addEdge(2, 1, 1)
-        graph.addEdge(3, 2, 1)
-        graph.addEdge(0, 2, 1)
-        graph.addEdge(4, 0, 3)
-
-        var predecessors = graph.getPredecessors(2)
-        predecessors.contains(1) should be (true)
-        predecessors.contains(0) should be (true)
-        predecessors.contains(2) should be (false)
-        predecessors.contains(3) should be (true)
-        predecessors.contains(4) should be (false)
+        val predecessorsOfThree = f.oriented_graph.getPredecessors(3)
+        predecessorsOfThree.contains(0) should be (false)
+        predecessorsOfThree.contains(1) should be (false)
+        predecessorsOfThree.contains(2) should be (true)
+        predecessorsOfThree.contains(3) should be (false)
     }
 
     it should "breadth-first search" in {
@@ -139,44 +151,92 @@ class test_Graph_list extends FlatSpec with Matchers {
     }
 
     it should "find the eccentricity" in {
-        var graphFindEccentricity = new Graph[Int](8)
-        graphFindEccentricity.addNode(0, 0)
-        graphFindEccentricity.addNode(1, 1)
-        graphFindEccentricity.addNode(2, 2)
-        graphFindEccentricity.addNode(3, 3)
-        graphFindEccentricity.addNode(4, 4)
-        graphFindEccentricity.addNode(5, 5)
-        graphFindEccentricity.addNode(6, 6)
-        graphFindEccentricity.addNode(7, 7)
+        val graph = new Graph[Int](8)
+        graph.addNode(0, 0)
+        graph.addNode(1, 1)
+        graph.addNode(2, 2)
+        graph.addNode(3, 3)
+        graph.addNode(4, 4)
+        graph.addNode(5, 5)
+        graph.addNode(6, 6)
+        graph.addNode(7, 7)
 
-        graphFindEccentricity.addEdge(0, 1, 1)
-        graphFindEccentricity.addEdge(0, 2, 1)
-        graphFindEccentricity.addEdge(0, 3, 1)
-        graphFindEccentricity.addEdge(1, 4, 1)
-        graphFindEccentricity.addEdge(1, 5, 1)
-        graphFindEccentricity.addEdge(2, 5, 1)
-        graphFindEccentricity.addEdge(2, 6, 1)
-        graphFindEccentricity.addEdge(5, 7, 1)
+        graph.addEdge(0, 1, 1)
+        graph.addEdge(0, 2, 1)
+        graph.addEdge(0, 3, 1)
+        graph.addEdge(1, 4, 1)
+        graph.addEdge(1, 5, 1)
+        graph.addEdge(2, 5, 1)
+        graph.addEdge(2, 6, 1)
+        graph.addEdge(5, 7, 1)
 
-        graphFindEccentricity.addEdge(1, 0, 1)
-        graphFindEccentricity.addEdge(2, 0, 1)
-        graphFindEccentricity.addEdge(3, 0, 1)
-        graphFindEccentricity.addEdge(4, 1, 1)
-        graphFindEccentricity.addEdge(5, 1, 1)
-        graphFindEccentricity.addEdge(5, 2, 1)
-        graphFindEccentricity.addEdge(6, 2, 1)
-        graphFindEccentricity.addEdge(7, 5, 1)
+        graph.addEdge(1, 0, 1)
+        graph.addEdge(2, 0, 1)
+        graph.addEdge(3, 0, 1)
+        graph.addEdge(4, 1, 1)
+        graph.addEdge(5, 1, 1)
+        graph.addEdge(5, 2, 1)
+        graph.addEdge(6, 2, 1)
+        graph.addEdge(7, 5, 1)
 
-        val (key, eccentricity) = graphFindEccentricity.calculateEccentricityOf(2)
-        key should be (2)
-        eccentricity should be (3)
+        graph.calculateEccentricityOf(2) should be (3)
+        graph.calculateEccentricityOf(3) should be (4)
+        graph.calculateEccentricityOf(6) should be (4)
+    }
 
-        val (key1, eccentricity1) = graphFindEccentricity.calculateEccentricityOf(3)
-        key1 should be (3)
-        eccentricity1 should be (4)
+    "A non-oriented Graph" should "get the successors" in {
+        val f = fixture_non_oriented_graph
 
-        val (key2, eccentricity2) = graphFindEccentricity.calculateEccentricityOf(6)
-        key2 should be (6)
-        eccentricity2 should be (4)
+        val successorsZero = f.non_oriented_graph.getSuccessors(0)
+        successorsZero.contains(0) should be (false)
+        successorsZero.contains(1) should be (true)
+        successorsZero.contains(2) should be (true)
+        successorsZero.contains(3) should be (false)
+
+        val successorsOne = f.non_oriented_graph.getSuccessors(1)
+        successorsOne.contains(0) should be (true)
+        successorsOne.contains(1) should be (false)
+        successorsOne.contains(2) should be (true)
+        successorsOne.contains(3) should be (false)
+
+        val successorsTwo = f.non_oriented_graph.getSuccessors(2)
+        successorsTwo.contains(0) should be (true)
+        successorsTwo.contains(1) should be (true)
+        successorsTwo.contains(2) should be (false)
+        successorsTwo.contains(3) should be (true)
+
+        val successorsThree = f.non_oriented_graph.getSuccessors(3)
+        successorsThree.contains(0) should be (false)
+        successorsThree.contains(1) should be (false)
+        successorsThree.contains(2) should be (true)
+        successorsThree.contains(3) should be (false)
+    }
+
+    it should "get the predecessors" in {
+        val f = fixture_non_oriented_graph
+
+        val predecessorsZero = f.non_oriented_graph.getPredecessors(0)
+        predecessorsZero.contains(0) should be (false)
+        predecessorsZero.contains(1) should be (true)
+        predecessorsZero.contains(2) should be (true)
+        predecessorsZero.contains(3) should be (false)
+
+        val predecessorsOne = f.non_oriented_graph.getPredecessors(1)
+        predecessorsOne.contains(0) should be (true)
+        predecessorsOne.contains(1) should be (false)
+        predecessorsOne.contains(2) should be (true)
+        predecessorsOne.contains(3) should be (false)
+
+        val predecessorsTwo = f.non_oriented_graph.getPredecessors(2)
+        predecessorsTwo.contains(1) should be (true)
+        predecessorsTwo.contains(0) should be (true)
+        predecessorsTwo.contains(2) should be (false)
+        predecessorsTwo.contains(3) should be (true)
+
+        val predecessorsThree = f.non_oriented_graph.getPredecessors(3)
+        predecessorsThree.contains(0) should be (false)
+        predecessorsThree.contains(1) should be (false)
+        predecessorsThree.contains(2) should be (true)
+        predecessorsThree.contains(3) should be (false)
     }
 }
