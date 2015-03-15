@@ -5,7 +5,7 @@ import org.scalatest._
 class test_Graph_list extends FlatSpec with Matchers {
 
     def fixture_oriented_graph = new {
-      val oriented_graph = new Graph[Int](10)
+      val oriented_graph = new Graph[Int]
       oriented_graph.addNode(0, 0)
       oriented_graph.addNode(1, 1)
       oriented_graph.addNode(2, 2)
@@ -17,7 +17,7 @@ class test_Graph_list extends FlatSpec with Matchers {
     }
 
     def fixture_non_oriented_graph = new {
-      val non_oriented_graph = new Graph[Int](10)
+      val non_oriented_graph = new Graph[Int]
       non_oriented_graph.addNode(0, 0)
       non_oriented_graph.addNode(1, 1)
       non_oriented_graph.addNode(2, 2)
@@ -35,7 +35,7 @@ class test_Graph_list extends FlatSpec with Matchers {
     }
 
     "A oriented Graph" should "add nodes" in {
-      val oriented_graph = new Graph[Int](5)
+      val oriented_graph = new Graph[Int]
       oriented_graph.adjacence.size should be (0)
       oriented_graph.addNode(2, 2)
       oriented_graph.adjacence.size should be (1)
@@ -43,7 +43,7 @@ class test_Graph_list extends FlatSpec with Matchers {
     }
 
     it should "add edges" in {
-        val oriented_graph = new Graph[Int](5)
+        val oriented_graph = new Graph[Int]
         oriented_graph.addNode(1, 1)
         oriented_graph.addNode(2, 2)
         oriented_graph.addEdge(1, 2, 1)
@@ -51,7 +51,7 @@ class test_Graph_list extends FlatSpec with Matchers {
     }
 
     it should "indicate if empty" in {
-        var graphEmpty = new Graph[Int](2)
+        var graphEmpty = new Graph[Int]
         graphEmpty.isEmpty should be (true)
         graphEmpty.addNode(0, 0)
         graphEmpty.isEmpty should be (false)
@@ -130,7 +130,7 @@ class test_Graph_list extends FlatSpec with Matchers {
     }
 
     it should "breadth-first search" in {
-        var graphBreadthFirstSearch = new Graph[Int](8)
+        var graphBreadthFirstSearch = new Graph[Int]
         graphBreadthFirstSearch.addNode(0, 0)
         graphBreadthFirstSearch.addNode(1, 1)
         graphBreadthFirstSearch.addNode(2, 2)
@@ -151,7 +151,7 @@ class test_Graph_list extends FlatSpec with Matchers {
     }
 
     it should "find the eccentricity" in {
-        val graph = new Graph[Int](8)
+        val graph = new Graph[Int]
         graph.addNode(0, 0)
         graph.addNode(1, 1)
         graph.addNode(2, 2)

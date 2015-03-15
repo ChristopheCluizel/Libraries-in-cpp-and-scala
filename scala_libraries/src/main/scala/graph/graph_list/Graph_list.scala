@@ -1,19 +1,27 @@
 package graph.graph_list
 
-/**
- * Graph is a class which represents a graph structure. Its implementation is based on an adjacence list which is less heavy than an adjacence matrix. One can use whatever kind of node with Graph.
- *
- * @author christophe
- */
-
 import math._
 import scala.util._
 import Array._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable
 
-class Graph[X](nbNodes: Int) {
+/**
+ * Graph is a class which represents a graph structure. Its implementation is based on an adjacence list which is less heavy than an adjacence matrix. One can use whatever kind of node with Graph.
+ *
+ * @author christophe
+ *
+ * @param <X> Enable any kind of node.
+ */
+class Graph[X] {
+    /**
+     * Implementation of the adjacence list. The key corresponds to the key of a father node and the value to an array containing the key of the successor nodes of this father node.
+     */
     var adjacence: Map[Int, ArrayBuffer[Int]] = Map()
+
+    /**
+     * Nodes is a list of all the nodes of the graph. It associates a key to any kind of node X.
+     */
     var nodes: Map[Int, X] = Map()
 
     /**
