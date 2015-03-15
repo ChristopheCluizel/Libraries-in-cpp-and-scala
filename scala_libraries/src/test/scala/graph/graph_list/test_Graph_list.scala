@@ -42,6 +42,20 @@ class test_Graph_list extends FlatSpec with Matchers {
         oriented_graph.nodes(2) should be (2)
     }
 
+    it should "remove a node" in {
+        val f = fixture_oriented_graph
+        f.oriented_graph.adjacence.contains(2) should be (true)
+        f.oriented_graph.nodes.contains(2) should be (true)
+
+        f.oriented_graph.removeNode(2)
+
+        f.oriented_graph.adjacence.contains(2) should be (false)
+        f.oriented_graph.nodes.contains(2) should be (false)
+        f.oriented_graph.getPredecessors(3).isEmpty should be (true)
+        f.oriented_graph.getPredecessors(0).isEmpty should be (true)
+        f.oriented_graph.getSuccessors(1).isEmpty should be (true)
+    }
+
     it should "add an edge" in {
         val oriented_graph = new Graph[Int]
         oriented_graph.addNode(1, 1)

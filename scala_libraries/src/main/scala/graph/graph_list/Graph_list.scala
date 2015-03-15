@@ -36,6 +36,17 @@ class Graph[T] {
     }
 
     /**
+     * Remove a node of the graph.
+     *
+     * @param key The key of the node to remove.
+     */
+    def removeNode(key: Int) = {
+        nodes -= key
+        adjacence -= key
+        for(i <- adjacence.keys) if(adjacence(i).contains(key)) adjacence(i) -= key
+    }
+
+    /**
      * Add an edge to the graph between two nodes.
      *
      * @param key1 The key of the first node.
@@ -89,7 +100,7 @@ class Graph[T] {
      */
     def getPredecessors(key: Int): ArrayBuffer[Int] = {
         var predecessors: ArrayBuffer[Int] = ArrayBuffer()
-        for(i <- 0 until adjacence.size) {
+        for(i <- adjacence.keys) {
             if(adjacence(i).contains(key)) {
                 predecessors += i
             }
