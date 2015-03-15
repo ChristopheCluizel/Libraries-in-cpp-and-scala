@@ -8,16 +8,23 @@ import scala.collection.mutable
 
 class Graph[X](nbNodes: Int) {
     var adjacence: Map[Int, ArrayBuffer[Int]] = Map()
+    var nodes: Map[Int, X] = Map()
 
     def addNode(key: Int, node: X) = {
+        nodes += (key -> node)
         adjacence += (key -> new ArrayBuffer())
     }
+
     def addEdge(key1 :Int, key2:Int, value: Int) = {
         adjacence(key1) += (key2)
     }
+
     def isEmpty: Boolean = adjacence.isEmpty
+
     def nodePresent(key: Int): Boolean = adjacence.contains(key)
+
     def edgePresent(key1: Int, key2: Int): Boolean = adjacence(key1).contains(key2)
+
     def getPredecessors(key: Int): ArrayBuffer[Int] = {
         var predecessors: ArrayBuffer[Int] = ArrayBuffer()
         for(i <- 0 until adjacence.size) {
@@ -39,7 +46,7 @@ class Graph[X](nbNodes: Int) {
         while(!queue.isEmpty) {
             actualNodeKey = queue.dequeue
             markedNode += actualNodeKey
-            listNodesVisited += actualNodeKey.toString + ", "   // for debug
+            listNodesVisited += actualNodeKey.toString + ", "
             // treat actual node here
             for(i <- getSuccessors(actualNodeKey)) if(!markedNode.contains(i) && !queue.contains(i)) queue += i
         }
@@ -47,11 +54,10 @@ class Graph[X](nbNodes: Int) {
         listNodesVisited
     }
 
-    def calculateEccentricityOf(key: Int): (Int, Int) = {
+    def calculateEccentricityOf(key: Int): Int = {
         var queue = new scala.collection.mutable.Queue[Int]
         var markedNode: ArrayBuffer[Int] = ArrayBuffer()
         var actualNodeKey = 0
-        var listNodesVisited = ""
         var eccentricity = 0
         var distances: scala.collection.mutable.Map[Int, Int] = scala.collection.mutable.Map()
 
@@ -67,7 +73,7 @@ class Graph[X](nbNodes: Int) {
                 eccentricity = distances(i)
             }
         }
-        (key, eccentricity)
+        eccentricity
     }
 
     def display = adjacence.keys.foreach {i =>
