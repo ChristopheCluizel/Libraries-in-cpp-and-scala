@@ -170,21 +170,7 @@ class Graph[T] {
     /**
      * Delete all the leaves of the graph. A leaf is a node which doesn't have any successors. This method has sense only for an oriented-graph.
      */
-    def shedTheLeaves() = {
-        val leaves: ArrayBuffer[Int] = ArrayBuffer()
-        adjacence.keys.foreach {i =>
-            if(getSuccessors(i).isEmpty) {
-                adjacence -= i
-                leaves += i
-            }
-        }
-        for(j <- 0 until leaves.size) {
-            adjacence.keys.foreach {i =>
-                if(adjacence(i).contains(leaves(j)))
-                adjacence(i) -= leaves(j)
-            }
-        }
-    }
+    def shedTheLeaves() = for(i <- adjacence.keys) if(getSuccessors(i).isEmpty) removeNode(i)
 
     /**
      * Display all the graph. Each node is displayed with its key, predecessors and successors.

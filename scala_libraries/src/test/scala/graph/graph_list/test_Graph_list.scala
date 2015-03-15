@@ -210,6 +210,7 @@ class test_Graph_list extends FlatSpec with Matchers {
     it should "shed its leaves" in {
       val f = fixture_oriented_graph
       f.oriented_graph.shedTheLeaves()
+      f.oriented_graph.nodes.contains(3) should be (false)
       f.oriented_graph.nodePresent(0) should be (true)
       f.oriented_graph.nodePresent(1) should be (true)
       f.oriented_graph.nodePresent(2) should be (true)
