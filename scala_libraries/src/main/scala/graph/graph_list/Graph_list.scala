@@ -34,6 +34,7 @@ class Graph[X](nbNodes: Int) {
         }
         predecessors
     }
+
     def getSuccessors(key: Int): ArrayBuffer[Int] = adjacence(key)
 
     def breadthFirstSearch(key: Int): String = {
@@ -74,6 +75,22 @@ class Graph[X](nbNodes: Int) {
             }
         }
         eccentricity
+    }
+
+    def shedTheLeaves() = {
+        val leaves: ArrayBuffer[Int] = ArrayBuffer()
+        adjacence.keys.foreach {i =>
+            if(getSuccessors(i).isEmpty) {
+                adjacence -= i
+                leaves += i
+            }
+        }
+        for(j <- 0 until leaves.size) {
+            adjacence.keys.foreach {i =>
+                if(adjacence(i).contains(leaves(j)))
+                adjacence(i) -= leaves(j)
+            }
+        }
     }
 
     def display = adjacence.keys.foreach {i =>
