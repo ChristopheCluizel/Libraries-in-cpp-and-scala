@@ -34,20 +34,29 @@ class test_Graph_list extends FlatSpec with Matchers {
       non_oriented_graph.addEdge(0, 2, 1)
     }
 
-    "A oriented Graph" should "add nodes" in {
-      val oriented_graph = new Graph[Int]
-      oriented_graph.adjacence.size should be (0)
-      oriented_graph.addNode(2, 2)
-      oriented_graph.adjacence.size should be (1)
-      oriented_graph.nodes(2) should be (2)
+    "A oriented Graph" should "add a node" in {
+        val oriented_graph = new Graph[Int]
+        oriented_graph.adjacence.size should be (0)
+        oriented_graph.addNode(2, 2)
+        oriented_graph.adjacence.size should be (1)
+        oriented_graph.nodes(2) should be (2)
     }
 
-    it should "add edges" in {
+    it should "add an edge" in {
         val oriented_graph = new Graph[Int]
         oriented_graph.addNode(1, 1)
         oriented_graph.addNode(2, 2)
         oriented_graph.addEdge(1, 2, 1)
         oriented_graph.adjacence(1)(0) should be (2)
+    }
+
+    it should "remove an edge" in {
+        val f = fixture_oriented_graph
+        f.oriented_graph.getPredecessors(0).contains(2) should be (true)
+        f.oriented_graph.getSuccessors(2).contains(0) should be (true)
+        f.oriented_graph.removeEdge(2, 0)
+        f.oriented_graph.getPredecessors(0).contains(2) should be (false)
+        f.oriented_graph.getSuccessors(2).contains(0) should be (false)
     }
 
     it should "indicate if empty" in {

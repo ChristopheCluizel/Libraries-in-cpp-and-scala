@@ -11,18 +11,18 @@ import scala.collection.mutable
  *
  * @author christophe
  *
- * @param <X> Enable any kind of node.
+ * @param <T> Enable any kind of node.
  */
-class Graph[X] {
+class Graph[T] {
     /**
      * Implementation of the adjacence list. The key corresponds to the key of a father node and the value to an array containing the key of the successor nodes of this father node.
      */
     var adjacence: Map[Int, ArrayBuffer[Int]] = Map()
 
     /**
-     * Nodes is a list of all the nodes of the graph. It associates a key to any kind of node X.
+     * Nodes is a list of all the nodes of the graph. It associates a key to any kind of node T.
      */
-    var nodes: Map[Int, X] = Map()
+    var nodes: Map[Int, T] = Map()
 
     /**
      * Add a node to the graph.
@@ -30,7 +30,7 @@ class Graph[X] {
      * @param key The key of the node inserted.
      * @param node The node inserted in the graph.
      */
-    def addNode(key: Int, node: X) = {
+    def addNode(key: Int, node: T) = {
         nodes += (key -> node)
         adjacence += (key -> new ArrayBuffer())
     }
@@ -42,8 +42,19 @@ class Graph[X] {
      * @param key2 The key of the second node.
      * @param value Not used yet.
      */
-    def addEdge(key1 :Int, key2:Int, value: Int) = {
+    def addEdge(key1: Int, key2: Int, value: Int) = {
         adjacence(key1) += (key2)
+    }
+
+    /**
+     * Remove an edge of the graph between two nodes.
+     *
+     * @param key1 The key of the first node.
+     * @param key2 The key of the second node.
+     */
+    def removeEdge(key1: Int, key2: Int) = {
+        if(adjacence(key1).contains(key2)) adjacence(key1) -= key2
+        if(adjacence(key2).contains(key1)) adjacence(key2) -= key1
     }
 
     /**
