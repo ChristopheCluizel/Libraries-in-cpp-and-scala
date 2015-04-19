@@ -1,4 +1,4 @@
-package benchmark
+package ownLib.benchmark
 
 /**
  * TicToc allows for easy benchmarking of different parts in source code.

@@ -1,10 +1,9 @@
-package graph.graph_list
+package ownLib.graph.graphList
 
 import math._
 import scala.util._
 import Array._
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.mutable
 
 /**
  * Graph is a class which represents a graph structure. Its implementation is based on an adjacence list which is less heavy than an adjacence matrix. One can use whatever kind of node with Graph.

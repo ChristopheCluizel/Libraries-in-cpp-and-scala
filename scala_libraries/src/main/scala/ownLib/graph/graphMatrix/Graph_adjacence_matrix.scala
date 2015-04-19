@@ -1,4 +1,4 @@
-package graph.graph_adjacence_matrix
+package ownLib.graph.graphMatrix
 
 import math._
 import scala.util._

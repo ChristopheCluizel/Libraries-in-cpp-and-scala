@@ -2,6 +2,12 @@ package graph.graph_adjacence_matrix
 
 import org.scalatest._
 
+import ownLib.graph.graph_adjacence_matrix.Graph;
+import ownLib.graph.graph_adjacence_matrix.graph;
+import ownLib.graph.graph_adjacence_matrix.graphBreadthFirstSearch;
+import ownLib.graph.graph_adjacence_matrix.graphEmpty;
+import ownLib.graph.graph_adjacence_matrix.graphFindEccentricity;
+
 class test_Graph_adjacence_matrix extends FlatSpec with Matchers {
 
     var graph = new Graph[Int](10)
