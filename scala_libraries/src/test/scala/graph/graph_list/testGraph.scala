@@ -1,8 +1,9 @@
 package graph.graph_list
 
 import org.scalatest._
+import ownLib.graph.graphList.Graph
 
-class test_Graph_list extends FlatSpec with Matchers {
+class testGraph extends FlatSpec with Matchers {
 
     def fixture_oriented_graph = new {
       val oriented_graph = new Graph[Int]
