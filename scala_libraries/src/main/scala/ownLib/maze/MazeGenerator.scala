@@ -1,4 +1,4 @@
-package ownLib.labyrinth
+package ownLib.maze
 
 import scala.util._
 import java.io.BufferedWriter
@@ -9,13 +9,15 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import scala.collection.mutable.ArrayBuffer
+
+import ownLib.graph.graphList.Graph
 import ownLib.tools.Coordinate
 
 object LabyrinthGenerator {
 
-    def saveLabyrinth(labyrinthe: Labyrinth, cheminFichier: String) = {
+    def saveMaze(labyrinthe: Maze, cheminFichier: String) = {
         val writer = new BufferedWriter(new FileWriter(cheminFichier + labyrinthe.graph.name + ".dot"))
-        writer.write(labyrinthe.graph.nbEdges + "\n")
+        writer.write(labyrinthe.width * labyrinthe.height + "\n")
         writer.write("graph " + labyrinthe.graph.name + " {\n")
         labyrinthe.graph.adjacence.keys.foreach { i =>
             for(j <- 0 until labyrinthe.graph.adjacence(i).size) {
@@ -34,7 +36,7 @@ object LabyrinthGenerator {
         val result = premiereLigne.split("\\s");
         val nomGraph = result(1)
 
-        val graph = new Graph[Int](nomGraph, nbEdges)
+        val graph = new Graph[Int](nomGraph)
         for(i <- 0 until nbEdges){
             val Array(key1, key2) = for(i <- reader.readLine split " -> ") yield i.toInt
             if(!graph.nodePresent(key1)) graph.addNode(key1, key1)
@@ -45,8 +47,8 @@ object LabyrinthGenerator {
         graph
     }
 
-    def generateLabyrinth(largeur: Int, hauteur: Int): Labyrinth = {
-        val graphe = new Graph[Int]("graph1", (largeur * hauteur - 1)*2)
+    def generateLabyrinth(largeur: Int, hauteur: Int): Maze = {
+        val graphe = new Graph[Int]("graph")
         val tabVoisins = Array.ofDim[Boolean](hauteur, largeur)
         for(i <- 0 until hauteur; j <- 0 until largeur) tabVoisins(i)(j) = false
         val rand = new Random();
@@ -80,7 +82,7 @@ object LabyrinthGenerator {
                 actualNodeKey = aleaSquareKey
             }
         }
-        return new Labyrinth(graphe, positionArrivee, positionDepart)
+        return new Maze(graphe, positionArrivee, positionDepart, largeur, hauteur)
     }
 
     private def getFalseNeighbours(actualNodeKey: Int, tabVoisins: Array[Array[Boolean]], largeur: Int, hauteur: Int): Array[Int] = {
