@@ -13,30 +13,30 @@ import scala.collection.mutable.ArrayBuffer
 import ownLib.graph.graphList.Graph
 import ownLib.tools.Coordinate
 
-object LabyrinthGenerator {
+object MazeGenerator {
 
-    def saveMaze(labyrinthe: Maze, cheminFichier: String) = {
-        val writer = new BufferedWriter(new FileWriter(cheminFichier + labyrinthe.graph.name + ".dot"))
-        writer.write(labyrinthe.width * labyrinthe.height + "\n")
-        writer.write("graph " + labyrinthe.graph.name + " {\n")
-        labyrinthe.graph.adjacence.keys.foreach { i =>
-            for(j <- 0 until labyrinthe.graph.adjacence(i).size) {
-                writer.write(i + " -> " + labyrinthe.graph.adjacence(i)(j) + "\n")
+    def saveMaze(maze: Maze, filePath: String) = {
+        val writer = new BufferedWriter(new FileWriter(filePath + maze.graph.name + ".dot"))
+        writer.write(maze.width * maze.height + "\n")
+        writer.write("graph " + maze.graph.name + " {\n")
+        maze.graph.adjacence.keys.foreach { i =>
+            for(j <- 0 until maze.graph.adjacence(i).size) {
+                writer.write(i + " -> " + maze.graph.adjacence(i)(j) + "\n")
             }
         }
         writer.write("}")
         writer.close()
     }
 
-    def loadGraph(cheminFichier: String): Graph[Int] = {
-        val reader = new BufferedReader(new FileReader(cheminFichier))
+    def loadGraph(filePath: String): Graph[Int] = {
+        val reader = new BufferedReader(new FileReader(filePath))
         val nbEdges = reader.readLine.toInt
         println("nb edges : " + nbEdges)
-        val premiereLigne = reader.readLine.toString
-        val result = premiereLigne.split("\\s");
-        val nomGraph = result(1)
+        val firstLine = reader.readLine.toString
+        val result = firstLine.split("\\s");
+        val graphName = result(1)
 
-        val graph = new Graph[Int](nomGraph)
+        val graph = new Graph[Int](graphName)
         for(i <- 0 until nbEdges){
             val Array(key1, key2) = for(i <- reader.readLine split " -> ") yield i.toInt
             if(!graph.nodePresent(key1)) graph.addNode(key1, key1)
@@ -47,7 +47,7 @@ object LabyrinthGenerator {
         graph
     }
 
-    def generateLabyrinth(largeur: Int, hauteur: Int): Maze = {
+    def generateMaze(largeur: Int, hauteur: Int): Maze = {
         val graphe = new Graph[Int]("graph")
         val tabVoisins = Array.ofDim[Boolean](hauteur, largeur)
         for(i <- 0 until hauteur; j <- 0 until largeur) tabVoisins(i)(j) = false
