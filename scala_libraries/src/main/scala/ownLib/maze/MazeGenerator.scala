@@ -15,38 +15,6 @@ import ownLib.tools.Coordinate
 
 object MazeGenerator {
 
-    def saveMaze(maze: Maze, filePath: String) = {
-        val writer = new BufferedWriter(new FileWriter(filePath + maze.graph.name + ".dot"))
-        writer.write(maze.width * maze.height + "\n")
-        writer.write("graph " + maze.graph.name + " {\n")
-        maze.graph.adjacence.keys.foreach { i =>
-            for(j <- 0 until maze.graph.adjacence(i).size) {
-                writer.write(i + " -> " + maze.graph.adjacence(i)(j) + "\n")
-            }
-        }
-        writer.write("}")
-        writer.close()
-    }
-
-    def loadGraph(filePath: String): Graph[Int] = {
-        val reader = new BufferedReader(new FileReader(filePath))
-        val nbEdges = reader.readLine.toInt
-        println("nb edges : " + nbEdges)
-        val firstLine = reader.readLine.toString
-        val result = firstLine.split("\\s");
-        val graphName = result(1)
-
-        val graph = new Graph[Int](graphName)
-        for(i <- 0 until nbEdges){
-            val Array(key1, key2) = for(i <- reader.readLine split " -> ") yield i.toInt
-            if(!graph.nodePresent(key1)) graph.addNode(key1, key1)
-            //if(!graph.nodePresent(key2)) graph.addNode(key2, key2)
-            graph.addEdge(key1, key2, 1)
-            //graph.addEdge(key2, key1, 1)
-        }
-        graph
-    }
-
     def generateMaze(largeur: Int, hauteur: Int): Maze = {
         val graphe = new Graph[Int]("graph")
         val tabVoisins = Array.ofDim[Boolean](hauteur, largeur)

@@ -4,6 +4,10 @@ import math._
 import scala.util._
 import Array._
 import scala.collection.mutable.ArrayBuffer
+import java.io.BufferedReader
+import java.io.FileReader
+import java.io.FileWriter
+import java.io.BufferedWriter
 
 /**
  * Graph is a class which represents a graph structure. Its implementation is based on an adjacence list which is less heavy than an adjacence matrix. One can use whatever kind of node with Graph.
@@ -98,7 +102,7 @@ class Graph[T](val name: String = "graph") {
    *
    * @return The number of nodes.
    */
-  def numberOfNode: Int = {
+  def numberOfNodes: Int = {
     nodes.size
   }
 
@@ -117,6 +121,7 @@ class Graph[T](val name: String = "graph") {
     }
     predecessors
   }
+
   /**
    * Get the keys of the nodes which are the successors of another one.
    *
@@ -124,6 +129,22 @@ class Graph[T](val name: String = "graph") {
    * @return The keys of the successor nodes.
    */
   def getSuccessors(key: Int): ArrayBuffer[Int] = adjacence(key)
+
+  /**
+   * Save the graph in a text file.
+   */
+  def save(fileName: String = name) = {
+    val writer = new BufferedWriter(new FileWriter(fileName + ".dot"))
+    writer.write(numberOfNodes + "\n")
+    writer.write("graph " + name + " {\n")
+    adjacence.keys.foreach { i =>
+      for (j <- 0 until adjacence(i).size) {
+        writer.write(i + " -> " + adjacence(i)(j) + "\n")
+      }
+    }
+    writer.write("}")
+    writer.close()
+  }
 
   /**
    * Scan the graph by breadth first search.
@@ -189,5 +210,28 @@ class Graph[T](val name: String = "graph") {
     println("key : " + i + ", Node : " + adjacence(i).toString +
       ", Successors : " + getSuccessors(i).mkString(", ") +
       ", Predecessors : " + getPredecessors(i).mkString(", "))
+  }
+}
+
+object Graph {
+
+  /**
+   * @param fileName The name of the text file where a graph is saved.
+   * @return The graph saved.
+   */
+  def load(fileName: String): Graph[Int] = {
+    val reader = new BufferedReader(new FileReader(fileName))
+    val nbEdges = reader.readLine.toInt
+    val firstLine = reader.readLine
+    val result = firstLine.split(" ");
+    val graphName = result(1)
+
+    val graph = new Graph[Int](graphName)
+    for (i <- 0 until nbEdges) {
+      val Array(key1, key2) = for (i <- reader.readLine split " -> ") yield i.toInt
+      if (!graph.nodePresent(key1)) graph.addNode(key1, key1)
+      graph.addEdge(key1, key2, 1)
+    }
+    graph
   }
 }
