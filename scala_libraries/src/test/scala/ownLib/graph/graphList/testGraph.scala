@@ -1,4 +1,4 @@
-package graph.graph_list
+package ownLib.graph_list
 
 import org.scalatest._
 import ownLib.graph.graphList.Graph
