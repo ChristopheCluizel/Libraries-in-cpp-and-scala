@@ -1,8 +1,5 @@
 package ownLib.graph.graphList
 
-import math._
-import scala.util._
-import Array._
 import scala.collection.mutable.ArrayBuffer
 import java.io.BufferedReader
 import java.io.FileReader
@@ -201,7 +198,7 @@ class Graph[T](val name: String = "graph") {
   def shedTheLeaves() = for (i <- adjacence.keys) if (getSuccessors(i).isEmpty) removeNode(i)
 
   /**
-   *  Redefine the toString method.
+   *  Redefine the toString method to describe a graph.
    */
   override def toString: String = {
     var string = numberOfNodes.toString() + "\n" +
@@ -244,6 +241,7 @@ object Graph {
     for (i <- 0 until nbEdges) {
       val Array(key1, key2) = for (i <- reader.readLine split " -> ") yield i.toInt
       if (!graph.nodePresent(key1)) graph.addNode(key1, key1)
+      if (!graph.nodePresent(key2)) graph.addNode(key2, key2)
       graph.addEdge(key1, key2, 1)
     }
     graph
