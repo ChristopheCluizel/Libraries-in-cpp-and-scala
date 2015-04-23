@@ -81,6 +81,11 @@ class testGraph extends FlatSpec with Matchers {
         graphEmpty.isEmpty should be (false)
     }
 
+    it should "indicate the number of nodes of the graph" in {
+      val f = fixture_oriented_graph
+      f.oriented_graph.numberOfNodes should be (4)
+    }
+
     it should "indicate if node present" in {
         val f = fixture_oriented_graph
         f.oriented_graph.adjacence.size should be (4)
@@ -218,6 +223,11 @@ class testGraph extends FlatSpec with Matchers {
       f.oriented_graph.nodePresent(3) should be (false)
     }
 
+    it should "have a toString method" in {
+      val f = fixture_oriented_graph
+      f.oriented_graph.toString should be ("4\ngraph graph {\n0 -> 1\n1 -> 2\n2 -> 3\n2 -> 0\n}")
+    }
+
     "A non-oriented Graph" should "get the successors" in {
         val f = fixture_non_oriented_graph
 
@@ -272,5 +282,14 @@ class testGraph extends FlatSpec with Matchers {
         predecessorsThree.contains(1) should be (false)
         predecessorsThree.contains(2) should be (true)
         predecessorsThree.contains(3) should be (false)
+    }
+
+        it should "remove an edge" in {
+        val f = fixture_non_oriented_graph
+        f.non_oriented_graph.getPredecessors(0).contains(2) should be (true)
+        f.non_oriented_graph.getSuccessors(2).contains(0) should be (true)
+        f.non_oriented_graph.removeEdge(2, 0)
+        f.non_oriented_graph.getPredecessors(0).contains(2) should be (false)
+        f.non_oriented_graph.getSuccessors(2).contains(0) should be (false)
     }
 }

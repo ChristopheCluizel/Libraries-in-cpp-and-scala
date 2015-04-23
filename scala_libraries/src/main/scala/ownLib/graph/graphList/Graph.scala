@@ -132,17 +132,14 @@ class Graph[T](val name: String = "graph") {
 
   /**
    * Save the graph in a text file.
+   *
+   * @param filePath The file path where will be stored the graph.
+   *
+   * The name of the file will be the name of the graph with the extension ".dot".
    */
-  def save(fileName: String = name) = {
-    val writer = new BufferedWriter(new FileWriter(fileName + ".dot"))
-    writer.write(numberOfNodes + "\n")
-    writer.write("graph " + name + " {\n")
-    adjacence.keys.foreach { i =>
-      for (j <- 0 until adjacence(i).size) {
-        writer.write(i + " -> " + adjacence(i)(j) + "\n")
-      }
-    }
-    writer.write("}")
+  def save(filePath: String = "") = {
+    val writer = new BufferedWriter(new FileWriter(filePath + name + ".dot"))
+    writer.write(toString)
     writer.close()
   }
 
@@ -204,6 +201,21 @@ class Graph[T](val name: String = "graph") {
   def shedTheLeaves() = for (i <- adjacence.keys) if (getSuccessors(i).isEmpty) removeNode(i)
 
   /**
+   *  Redefine the toString method.
+   */
+  override def toString: String = {
+    var string = numberOfNodes.toString() + "\n" +
+      "graph " + name + " {\n"
+    adjacence.keys.foreach { i =>
+      for (j <- 0 until adjacence(i).size) {
+        string += i.toString() + " -> " + adjacence(i)(j).toString() + "\n"
+      }
+    }
+    string += "}"
+    string
+  }
+
+  /**
    * Display all the graph. Each node is displayed with its key, predecessors and successors.
    */
   def display = adjacence.keys.foreach { i =>
@@ -216,8 +228,10 @@ class Graph[T](val name: String = "graph") {
 object Graph {
 
   /**
+   * Load a graph from a text file.
+   *
    * @param fileName The name of the text file where a graph is saved.
-   * @return The graph saved.
+   * @return The graph loaded.
    */
   def load(fileName: String): Graph[Int] = {
     val reader = new BufferedReader(new FileReader(fileName))
