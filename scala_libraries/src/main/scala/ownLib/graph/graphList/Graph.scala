@@ -246,6 +246,7 @@ object Graph {
       if (!graph.nodePresent(key2)) graph.addNode(key2, key2)
       graph.addEdge(key1, key2, 1)
     }
+    reader.close()
     graph
   }
 }
