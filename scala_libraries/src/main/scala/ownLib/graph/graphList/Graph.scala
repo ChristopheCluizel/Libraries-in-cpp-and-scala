@@ -201,7 +201,7 @@ class Graph[T](val name: String = "graph") {
    *  Redefine the toString method to describe a graph.
    */
   override def toString: String = {
-    var string = numberOfNodes.toString() + "\n" +
+    var string = ((numberOfNodes - 1) * 2).toString() + "\n" +
       "graph " + name + " {\n"
     adjacence.keys.foreach { i =>
       for (j <- 0 until adjacence(i).size) {
