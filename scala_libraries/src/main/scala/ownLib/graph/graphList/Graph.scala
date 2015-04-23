@@ -215,11 +215,13 @@ class Graph[T](val name: String = "graph") {
   /**
    * Display all the graph. Each node is displayed with its key, predecessors and successors.
    */
+  // $COVERAGE-OFF$
   def display = adjacence.keys.foreach { i =>
     println("key : " + i + ", Node : " + adjacence(i).toString +
       ", Successors : " + getSuccessors(i).mkString(", ") +
       ", Predecessors : " + getPredecessors(i).mkString(", "))
   }
+  // $COVERAGE-ON$
 }
 
 object Graph {
