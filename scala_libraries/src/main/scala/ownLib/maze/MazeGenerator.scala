@@ -15,74 +15,77 @@ import ownLib.tools.Coordinate
 
 object MazeGenerator {
 
-    def generateMaze(width: Int, height: Int): Maze = {
-        val graph = new Graph[Int]("graph")
-        val neighbours = Array.ofDim[Boolean](height, width)
-        for(i <- 0 until height; j <- 0 until width) neighbours(i)(j) = false
-        val rand = new Random();
-        //val departure = new Coordinate(rand.nextInt(width), rand.nextInt(height))
-        val departure = new Coordinate(0, 0)
-        val arrival = new Coordinate(width / 2, height / 2)
+  def generateMaze(width: Int, height: Int): Maze = {
 
-        var stack = new scala.collection.mutable.Stack[Int]
-        var markedNode: ArrayBuffer[Int] = ArrayBuffer()
+    val graph = new Graph[Int]("graph")
+    val neighbours = Array.ofDim[Boolean](height, width)
+    for (i <- 0 until height; j <- 0 until width) neighbours(i)(j) = false
+    val rand = new Random();
+    //val departure = new Coordinate(rand.nextInt(width), rand.nextInt(height))
+    val departure = new Coordinate(0, 0)
+    val arrival = new Coordinate(width / 2, height / 2)
 
-        var actualNodeKey = coordinatesToKey(departure.x, departure.y, width)
+    var stack = new scala.collection.mutable.Stack[Int]
+    var markedNode: ArrayBuffer[Int] = ArrayBuffer()
+
+    var actualNodeKey = coordinatesToKey(departure.x, departure.y, width)
+    markedNode += actualNodeKey
+    neighbours(keyToCoordinates(actualNodeKey, width).y)(keyToCoordinates(actualNodeKey, width).x) = true
+
+    while (markedNode.length < width * height) {
+      val falseNeighbours = getFalseNeighbours(actualNodeKey, neighbours, width, height)
+      if (!falseNeighbours.isEmpty) {
+        val randomFalseNeighbour = getRandomFalseSquareInArray(falseNeighbours)
+        stack push actualNodeKey
+        removeWallBetween(graph, actualNodeKey, randomFalseNeighbour)
+        actualNodeKey = randomFalseNeighbour
         markedNode += actualNodeKey
         neighbours(keyToCoordinates(actualNodeKey, width).y)(keyToCoordinates(actualNodeKey, width).x) = true
+      } else if (!stack.isEmpty) {
+        actualNodeKey = stack.head
+        stack.pop
+      } else {
+        val aleaSquareKey = getRandomFalseSquareInDoubleArray(neighbours, width, height)
+        actualNodeKey = aleaSquareKey
+      }
+    }
+    return new Maze(graph, arrival, departure, width, height)
+  }
 
-        while(markedNode.length < width * height) {
-            val falseNeighbours = getFalseNeighbours(actualNodeKey, neighbours, width, height)
-            if(! falseNeighbours.isEmpty) {
-                val randomFalseNeighbour = getRandomFalseSquareInArray(falseNeighbours)
-                stack push actualNodeKey
-                removeWallBetween(graph, actualNodeKey, randomFalseNeighbour)
-                actualNodeKey = randomFalseNeighbour
-                markedNode += actualNodeKey
-                neighbours(keyToCoordinates(actualNodeKey, width).y)(keyToCoordinates(actualNodeKey, width).x) = true
-            }
-            else if(! stack.isEmpty) {
-                actualNodeKey = stack.head
-                stack.pop
-            }
-            else {
-                val aleaSquareKey = getRandomFalseSquareInDoubleArray(neighbours, width, height)
-                actualNodeKey = aleaSquareKey
-            }
-        }
-        return new Maze(graph, arrival, departure, width, height)
-    }
+  private def getFalseNeighbours(actualNodeKey: Int, neighbours: Array[Array[Boolean]], width: Int, height: Int): Array[Int] = {
+    val position = keyToCoordinates(actualNodeKey, width)
+    var minY = position.y - 1
+    var maxY = position.y + 1
+    var minX = position.x - 1
+    var maxX = position.x + 1
+    if (position.y == 0) minY = 0
+    if (position.y == height - 1) maxY = height - 1
+    if (position.x == 0) minX = 0
+    if (position.x == width - 1) maxX = width - 1
+    val voisins = for (i <- minY to maxY; j <- minX to maxX if (neighbours(i)(j) == false && (i == position.y || j == position.x) && !(i == position.y && j == position.x))) yield coordinatesToKey(j, i, width)
+    return voisins.toArray
+  }
 
-    private def getFalseNeighbours(actualNodeKey: Int, neighbours: Array[Array[Boolean]], width: Int, height: Int): Array[Int] = {
-        val position = keyToCoordinates(actualNodeKey, width)
-        var minY = position.y - 1
-        var maxY = position.y + 1
-        var minX = position.x - 1
-        var maxX = position.x + 1
-        if(position.y == 0) minY = 0
-        if(position.y == height-1) maxY = height-1
-        if(position.x == 0) minX = 0
-        if(position.x == width-1) maxX = width-1
-        val voisins = for(i <- minY to maxY; j <- minX to maxX if(neighbours(i)(j) == false && (i == position.y || j == position.x) && !(i == position.y && j == position.x))) yield coordinatesToKey(j, i, width)
-        return voisins.toArray
-    }
+  private def getRandomFalseSquareInArray(falseNeighbours: Array[Int]): Int = {
+    val rand = new Random();
+    val aleaNumber = rand.nextInt(falseNeighbours.length)
+    return falseNeighbours(aleaNumber)
+  }
 
-    private def getRandomFalseSquareInArray(falseNeighbours: Array[Int]): Int = {
-        val rand = new Random();
-        val aleaNumber = rand.nextInt(falseNeighbours.length)
-        return falseNeighbours(aleaNumber)
-    }
-    private def removeWallBetween(graph: Graph[Int], actualNodeKey: Int, randomFalseNeighbour: Int) = {
-        if(!graph.nodePresent(actualNodeKey)) graph.addNode(actualNodeKey, actualNodeKey)
-        if(!graph.nodePresent(randomFalseNeighbour)) graph.addNode(randomFalseNeighbour, randomFalseNeighbour)
+  private def removeWallBetween(graph: Graph[Int], actualNodeKey: Int, randomFalseNeighbour: Int) = {
+    if (!graph.nodePresent(actualNodeKey)) graph.addNode(actualNodeKey, actualNodeKey)
+    if (!graph.nodePresent(randomFalseNeighbour)) graph.addNode(randomFalseNeighbour, randomFalseNeighbour)
 
-        graph.addEdge(actualNodeKey, randomFalseNeighbour, 1)
-        graph.addEdge(randomFalseNeighbour, actualNodeKey, 1)
-    }
-    private def getRandomFalseSquareInDoubleArray(neighbours: Array[Array[Boolean]], width: Int, height: Int): Int = {
-        val falseSquares = for(i <- 0 until height; j <- 0 until width if(neighbours(i)(j) == false)) yield coordinatesToKey(i, j, width)
-        return getRandomFalseSquareInArray(falseSquares.toArray)
-    }
-    def keyToCoordinates(key: Int, graphWidth: Int): Coordinate = new Coordinate(key % graphWidth, key / graphWidth)
-    def coordinatesToKey(x: Int, y: Int, graphWidth: Int): Int = graphWidth * y + x
+    graph.addEdge(actualNodeKey, randomFalseNeighbour, 1)
+    graph.addEdge(randomFalseNeighbour, actualNodeKey, 1)
+  }
+
+  private def getRandomFalseSquareInDoubleArray(neighbours: Array[Array[Boolean]], width: Int, height: Int): Int = {
+    val falseSquares = for (i <- 0 until height; j <- 0 until width if (neighbours(i)(j) == false)) yield coordinatesToKey(i, j, width)
+    return getRandomFalseSquareInArray(falseSquares.toArray)
+  }
+
+  def keyToCoordinates(key: Int, graphWidth: Int): Coordinate = new Coordinate(key % graphWidth, key / graphWidth)
+
+  def coordinatesToKey(x: Int, y: Int, graphWidth: Int): Int = graphWidth * y + x
 }
