@@ -16,6 +16,8 @@ import java.io.BufferedWriter
  */
 class Graph[T](val name: String = "graph") {
 
+  var numberOfEdges = 0
+
   /**
    * Implementation of the adjacence list. The key corresponds to the key of a father node and the value to an array containing the key of the successor nodes of this father node.
    */
@@ -57,6 +59,7 @@ class Graph[T](val name: String = "graph") {
    */
   def addEdge(key1: Int, key2: Int, value: Int) = {
     adjacence(key1) += (key2)
+    numberOfEdges += 1
   }
 
   /**
@@ -67,7 +70,7 @@ class Graph[T](val name: String = "graph") {
    */
   def removeEdge(key1: Int, key2: Int) = {
     if (adjacence(key1).contains(key2)) adjacence(key1) -= key2
-    if (adjacence(key2).contains(key1)) adjacence(key2) -= key1
+    numberOfEdges -= 1
   }
 
   /**
@@ -201,7 +204,7 @@ class Graph[T](val name: String = "graph") {
    *  Redefine the toString method to describe a graph.
    */
   override def toString: String = {
-    var string = ((numberOfNodes - 1) * 2).toString() + "\n" +
+    var string = numberOfEdges.toString() + "\n" +
       "graph " + name + " {\n"
     adjacence.keys.foreach { i =>
       for (j <- 0 until adjacence(i).size) {

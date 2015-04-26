@@ -18,25 +18,7 @@ class testGraph extends FlatSpec with Matchers {
     oriented_graph.addEdge(2, 0, 1)
   }
 
-  def fixture_non_oriented_graph = new {
-    val non_oriented_graph = new Graph[Int]
-    non_oriented_graph.addNode(0, 0)
-    non_oriented_graph.addNode(1, 1)
-    non_oriented_graph.addNode(2, 2)
-    non_oriented_graph.addNode(3, 3)
-
-    non_oriented_graph.addEdge(0, 1, 1)
-    non_oriented_graph.addEdge(1, 2, 1)
-    non_oriented_graph.addEdge(2, 3, 1)
-    non_oriented_graph.addEdge(2, 0, 1)
-
-    non_oriented_graph.addEdge(1, 0, 1)
-    non_oriented_graph.addEdge(2, 1, 1)
-    non_oriented_graph.addEdge(3, 2, 1)
-    non_oriented_graph.addEdge(0, 2, 1)
-  }
-
-  "A oriented Graph" should "add a node" in {
+  "A Graph with adjacent list" should "add a node" in {
     val oriented_graph = new Graph[Int]
     oriented_graph.adjacence.size should be(0)
     oriented_graph.addNode(2, 2)
@@ -245,70 +227,5 @@ class testGraph extends FlatSpec with Matchers {
     graph.edgePresent(1, 2) should be(true)
     graph.edgePresent(2, 0) should be(true)
     graph.edgePresent(2, 3) should be(true)
-  }
-
-  "A non-oriented Graph" should "get the successors" in {
-    val f = fixture_non_oriented_graph
-
-    val successorsZero = f.non_oriented_graph.getSuccessors(0)
-    successorsZero.contains(0) should be(false)
-    successorsZero.contains(1) should be(true)
-    successorsZero.contains(2) should be(true)
-    successorsZero.contains(3) should be(false)
-
-    val successorsOne = f.non_oriented_graph.getSuccessors(1)
-    successorsOne.contains(0) should be(true)
-    successorsOne.contains(1) should be(false)
-    successorsOne.contains(2) should be(true)
-    successorsOne.contains(3) should be(false)
-
-    val successorsTwo = f.non_oriented_graph.getSuccessors(2)
-    successorsTwo.contains(0) should be(true)
-    successorsTwo.contains(1) should be(true)
-    successorsTwo.contains(2) should be(false)
-    successorsTwo.contains(3) should be(true)
-
-    val successorsThree = f.non_oriented_graph.getSuccessors(3)
-    successorsThree.contains(0) should be(false)
-    successorsThree.contains(1) should be(false)
-    successorsThree.contains(2) should be(true)
-    successorsThree.contains(3) should be(false)
-  }
-
-  it should "get the predecessors" in {
-    val f = fixture_non_oriented_graph
-
-    val predecessorsZero = f.non_oriented_graph.getPredecessors(0)
-    predecessorsZero.contains(0) should be(false)
-    predecessorsZero.contains(1) should be(true)
-    predecessorsZero.contains(2) should be(true)
-    predecessorsZero.contains(3) should be(false)
-
-    val predecessorsOne = f.non_oriented_graph.getPredecessors(1)
-    predecessorsOne.contains(0) should be(true)
-    predecessorsOne.contains(1) should be(false)
-    predecessorsOne.contains(2) should be(true)
-    predecessorsOne.contains(3) should be(false)
-
-    val predecessorsTwo = f.non_oriented_graph.getPredecessors(2)
-    predecessorsTwo.contains(1) should be(true)
-    predecessorsTwo.contains(0) should be(true)
-    predecessorsTwo.contains(2) should be(false)
-    predecessorsTwo.contains(3) should be(true)
-
-    val predecessorsThree = f.non_oriented_graph.getPredecessors(3)
-    predecessorsThree.contains(0) should be(false)
-    predecessorsThree.contains(1) should be(false)
-    predecessorsThree.contains(2) should be(true)
-    predecessorsThree.contains(3) should be(false)
-  }
-
-  it should "remove an edge" in {
-    val f = fixture_non_oriented_graph
-    f.non_oriented_graph.getPredecessors(0).contains(2) should be(true)
-    f.non_oriented_graph.getSuccessors(2).contains(0) should be(true)
-    f.non_oriented_graph.removeEdge(2, 0)
-    f.non_oriented_graph.getPredecessors(0).contains(2) should be(false)
-    f.non_oriented_graph.getSuccessors(2).contains(0) should be(false)
   }
 }

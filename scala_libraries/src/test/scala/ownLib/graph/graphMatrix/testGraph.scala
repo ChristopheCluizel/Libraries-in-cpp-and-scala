@@ -15,7 +15,7 @@ class testGraph extends FlatSpec with Matchers {
   graph.addEdge(2, 3, 1)
   graph.addEdge(2, 0, 1)
 
-  "A Graph" should "add nodes" in {
+  "A Graph with matrix" should "add nodes" in {
     graph.nodes(0) should be(0)
     graph.nodes(1) should be(1)
   }
