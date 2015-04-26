@@ -6,3 +6,5 @@
 .project
 .settings/*
 target/
+maze
+src/main/scala/ownLib/MainClass.scala
