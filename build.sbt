@@ -8,5 +8,3 @@ lazy val root = (project in file(".")).
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
 
 ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := ".*benchmark.*"
-
-#test
