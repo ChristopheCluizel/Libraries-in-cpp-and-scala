@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/ChristopheCluizel/Libraries-in-scala.svg?branch=develop)](https://travis-ci.org/ChristopheCluizel/Libraries-in-scala)
+[![Coverage Status](https://coveralls.io/repos/ChristopheCluizel/Libraries-in-scala/badge.svg?branch=develop)](https://coveralls.io/r/ChristopheCluizel/Libraries-in-scala?branch=develop)
+
 Libraries in Scala
 ==========================
 
