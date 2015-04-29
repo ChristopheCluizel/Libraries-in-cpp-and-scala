@@ -2,6 +2,9 @@ package ownLib.tools
 
 import scala.Boolean
 
+/**
+ * This class represents a coordinate in 2 dimensions
+ */
 class Coordinate(var x: Int, var y: Int) {
 
   /**
