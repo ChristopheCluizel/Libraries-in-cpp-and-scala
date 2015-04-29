@@ -29,9 +29,9 @@ object MazeGenerator {
     var stack = new scala.collection.mutable.Stack[Int]
     var markedNode: ArrayBuffer[Int] = ArrayBuffer()
 
-    var actualNodeKey = Conversion.coordinatesToKey(departure, width)
+    var actualNodeKey = Conversion.coordinateToKey(departure, width)
     markedNode += actualNodeKey
-    neighbours(Conversion.keyToCoordinates(actualNodeKey, width).y)(Conversion.keyToCoordinates(actualNodeKey, width).x) = true
+    neighbours(Conversion.keyToCoordinate(actualNodeKey, width).y)(Conversion.keyToCoordinate(actualNodeKey, width).x) = true
 
     while (markedNode.length < width * height) {
       val falseNeighbours = getFalseNeighbours(actualNodeKey, neighbours, width, height)
@@ -41,7 +41,7 @@ object MazeGenerator {
         removeWallBetween(graph, actualNodeKey, randomFalseNeighbour)
         actualNodeKey = randomFalseNeighbour
         markedNode += actualNodeKey
-        neighbours(Conversion.keyToCoordinates(actualNodeKey, width).y)(Conversion.keyToCoordinates(actualNodeKey, width).x) = true
+        neighbours(Conversion.keyToCoordinate(actualNodeKey, width).y)(Conversion.keyToCoordinate(actualNodeKey, width).x) = true
       } else if (!stack.isEmpty) {
         actualNodeKey = stack.head
         stack.pop
@@ -54,7 +54,7 @@ object MazeGenerator {
   }
 
   private def getFalseNeighbours(actualNodeKey: Int, neighbours: Array[Array[Boolean]], width: Int, height: Int): Array[Int] = {
-    val position = Conversion.keyToCoordinates(actualNodeKey, width)
+    val position = Conversion.keyToCoordinate(actualNodeKey, width)
     var minY = position.y - 1
     var maxY = position.y + 1
     var minX = position.x - 1
@@ -63,7 +63,7 @@ object MazeGenerator {
     if (position.y == height - 1) maxY = height - 1
     if (position.x == 0) minX = 0
     if (position.x == width - 1) maxX = width - 1
-    val voisins = for (i <- minY to maxY; j <- minX to maxX if (neighbours(i)(j) == false && (i == position.y || j == position.x) && !(i == position.y && j == position.x))) yield Conversion.coordinatesToKey(new Coordinate(j, i), width)
+    val voisins = for (i <- minY to maxY; j <- minX to maxX if (neighbours(i)(j) == false && (i == position.y || j == position.x) && !(i == position.y && j == position.x))) yield Conversion.coordinateToKey(new Coordinate(j, i), width)
     return voisins.toArray
   }
 
@@ -82,7 +82,7 @@ object MazeGenerator {
   }
 
   private def getRandomFalseSquareInDoubleArray(neighbours: Array[Array[Boolean]], width: Int, height: Int): Int = {
-    val falseSquares = for (i <- 0 until height; j <- 0 until width if (neighbours(i)(j) == false)) yield Conversion.coordinatesToKey(new Coordinate(j, i), width)
+    val falseSquares = for (i <- 0 until height; j <- 0 until width if (neighbours(i)(j) == false)) yield Conversion.coordinateToKey(new Coordinate(j, i), width)
     return getRandomFalseSquareInArray(falseSquares.toArray)
   }
 }

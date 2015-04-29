@@ -9,8 +9,8 @@ object MazeSolver {
 
   def solveMaze(maze: Maze): ArrayBuffer[Int] = {
     val graph = maze.graph
-    val departureKey = Conversion.coordinatesToKey(maze.departure, maze.width)
-    val arrivalKey = Conversion.coordinatesToKey(maze.arrival, maze.width)
+    val departureKey = Conversion.coordinateToKey(maze.departure, maze.width)
+    val arrivalKey = Conversion.coordinateToKey(maze.arrival, maze.width)
     var queue = new scala.collection.mutable.Queue[Int]
     var markedNode: ArrayBuffer[Int] = ArrayBuffer()
     var actualNodeKey = 0

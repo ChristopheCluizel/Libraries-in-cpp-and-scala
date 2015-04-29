@@ -15,7 +15,7 @@ object Conversion {
    * @return The coordinate of the maze square corresponding to the key node of the graph.
    * @see Coordinate
    */
-  def keyToCoordinates(key: Int, mazeWidth: Int): Coordinate = new Coordinate(key % mazeWidth, key / mazeWidth)
+  def keyToCoordinate(key: Int, mazeWidth: Int): Coordinate = new Coordinate(key % mazeWidth, key / mazeWidth)
 
   /**
    * Convert a square coordinate of a maze to a key node of the graph associated.
@@ -25,5 +25,5 @@ object Conversion {
    * @return The key node of the graph corresponding to the maze square.
    * @see Coordinate
    */
-  def coordinatesToKey(coordinate: Coordinate, mazeWidth: Int): Int = mazeWidth * coordinate.y + coordinate.x
+  def coordinateToKey(coordinate: Coordinate, mazeWidth: Int): Int = mazeWidth * coordinate.y + coordinate.x
 }
