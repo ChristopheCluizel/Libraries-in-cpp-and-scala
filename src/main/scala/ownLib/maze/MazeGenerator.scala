@@ -9,10 +9,10 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import scala.collection.mutable.ArrayBuffer
-
 import ownLib.graph.graphList.Graph
 import ownLib.tools.Coordinate
 import ownLib.maze.tools.Conversion
+import ownLib.tools.Coordinate
 
 object MazeGenerator {
 
@@ -29,7 +29,7 @@ object MazeGenerator {
     var stack = new scala.collection.mutable.Stack[Int]
     var markedNode: ArrayBuffer[Int] = ArrayBuffer()
 
-    var actualNodeKey = Conversion.coordinatesToKey(departure.x, departure.y, width)
+    var actualNodeKey = Conversion.coordinatesToKey(departure, width)
     markedNode += actualNodeKey
     neighbours(Conversion.keyToCoordinates(actualNodeKey, width).y)(Conversion.keyToCoordinates(actualNodeKey, width).x) = true
 
@@ -63,7 +63,7 @@ object MazeGenerator {
     if (position.y == height - 1) maxY = height - 1
     if (position.x == 0) minX = 0
     if (position.x == width - 1) maxX = width - 1
-    val voisins = for (i <- minY to maxY; j <- minX to maxX if (neighbours(i)(j) == false && (i == position.y || j == position.x) && !(i == position.y && j == position.x))) yield Conversion.coordinatesToKey(j, i, width)
+    val voisins = for (i <- minY to maxY; j <- minX to maxX if (neighbours(i)(j) == false && (i == position.y || j == position.x) && !(i == position.y && j == position.x))) yield Conversion.coordinatesToKey(new Coordinate(j, i), width)
     return voisins.toArray
   }
 
@@ -82,7 +82,7 @@ object MazeGenerator {
   }
 
   private def getRandomFalseSquareInDoubleArray(neighbours: Array[Array[Boolean]], width: Int, height: Int): Int = {
-    val falseSquares = for (i <- 0 until height; j <- 0 until width if (neighbours(i)(j) == false)) yield Conversion.coordinatesToKey(i, j, width)
+    val falseSquares = for (i <- 0 until height; j <- 0 until width if (neighbours(i)(j) == false)) yield Conversion.coordinatesToKey(new Coordinate(j, i), width)
     return getRandomFalseSquareInArray(falseSquares.toArray)
   }
 }
