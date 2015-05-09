@@ -1,6 +1,7 @@
 /bin/
 *.class
 *.jar
+*.so
 .cache
 .classpath
 .project
