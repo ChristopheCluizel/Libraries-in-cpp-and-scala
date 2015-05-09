@@ -16,14 +16,13 @@ import ownLib.tools.Coordinate
 
 object MazeGenerator {
 
-  def generateMaze(width: Int, height: Int): Maze = {
+  def generateMaze(width: Int, height: Int, name: String = "maze"): Maze = {
 
-    val graph = new Graph[Int]("graph")
+    val graph = new Graph[Int]()
     val neighbours = Array.ofDim[Boolean](height, width)
     for (i <- 0 until height; j <- 0 until width) neighbours(i)(j) = false
     val rand = new Random();
-    //val departure = new Coordinate(rand.nextInt(width), rand.nextInt(height))
-    val departure = new Coordinate(0, 0)
+    val departure = new Coordinate(rand.nextInt(width), rand.nextInt(height))
     val arrival = new Coordinate(width / 2, height / 2)
 
     var stack = new scala.collection.mutable.Stack[Int]
@@ -50,7 +49,7 @@ object MazeGenerator {
         actualNodeKey = aleaSquareKey
       }
     }
-    return new Maze(graph, arrival, departure, width, height)
+    return new Maze(graph, arrival, departure, width, height, name)
   }
 
   private def getFalseNeighbours(actualNodeKey: Int, neighbours: Array[Array[Boolean]], width: Int, height: Int): Array[Int] = {
