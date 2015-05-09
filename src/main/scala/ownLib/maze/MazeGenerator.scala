@@ -10,7 +10,6 @@ import java.io.FileReader
 import java.io.FileWriter
 import scala.collection.mutable.ArrayBuffer
 import ownLib.graph.graphList.Graph
-import ownLib.tools.Coordinate
 import ownLib.maze.tools.Conversion
 import ownLib.tools.Coordinate
 
@@ -22,8 +21,12 @@ object MazeGenerator {
     val neighbours = Array.ofDim[Boolean](height, width)
     for (i <- 0 until height; j <- 0 until width) neighbours(i)(j) = false
     val rand = new Random();
-    val departure = new Coordinate(rand.nextInt(width), rand.nextInt(height))
-    val arrival = new Coordinate(width / 2, height / 2)
+    val departure = new Coordinate(width / 2, height / 2)
+    var arrival: Coordinate = null
+    // avoid to have the same departure and arrival square
+    do {
+      arrival = new Coordinate(rand.nextInt(width), rand.nextInt(height))
+    } while (arrival == departure);
 
     var stack = new scala.collection.mutable.Stack[Int]
     var markedNode: ArrayBuffer[Int] = ArrayBuffer()
@@ -49,7 +52,7 @@ object MazeGenerator {
         actualNodeKey = aleaSquareKey
       }
     }
-    return new Maze(graph, arrival, departure, width, height, name)
+    return new Maze(graph, departure, arrival, width, height, name)
   }
 
   private def getFalseNeighbours(actualNodeKey: Int, neighbours: Array[Array[Boolean]], width: Int, height: Int): Array[Int] = {
