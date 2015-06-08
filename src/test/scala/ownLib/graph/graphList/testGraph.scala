@@ -1,7 +1,6 @@
-package ownLib.graph_list
+package ownLib.graph.graphList
 
 import org.scalatest._
-import ownLib.graph.graphList.Graph
 import java.io.File
 
 class testGraph extends FlatSpec with Matchers {
