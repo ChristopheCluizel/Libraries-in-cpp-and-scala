@@ -35,8 +35,10 @@ class Graph[T](val name: String = "graph") {
    * @param node The node inserted in the graph.
    */
   def addNode(key: Int, node: T) = {
-    nodes += (key -> node)
-    adjacence += (key -> new ArrayBuffer())
+    if (!nodes.contains(key)) {
+      nodes += (key -> node)
+      adjacence += (key -> new ArrayBuffer())
+    }
   }
 
   /**
@@ -58,8 +60,10 @@ class Graph[T](val name: String = "graph") {
    * @param value Not used yet.
    */
   def addEdge(key1: Int, key2: Int, value: Int) = {
-    adjacence(key1) += (key2)
-    numberOfEdges += 1
+    if (!adjacence(key1).contains(key2)) {
+      adjacence(key1) += (key2)
+      numberOfEdges += 1
+    }
   }
 
   /**
