@@ -1,10 +1,6 @@
 package ownLib.maze.tools
 
-import java.io.BufferedReader
-import java.io.FileReader
-
-import scala.io.StdIn.readInt
-import scala.io.StdIn.readLine
+import java.io.{BufferedReader, FileReader}
 
 /**
  * MatrixLoader is a loader for a matrix stored in a text file.

@@ -1,8 +1,6 @@
 package ownLib.tools
 
-import org.scalatest.Matchers
-import org.scalatest.FlatSpec
-import org.scalatest.FixtureEngine
+import org.scalatest.{FlatSpec, Matchers}
 
 class testCoordinate extends FlatSpec with Matchers {
 

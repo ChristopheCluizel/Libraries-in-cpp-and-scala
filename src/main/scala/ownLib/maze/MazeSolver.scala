@@ -1,7 +1,7 @@
 package ownLib.maze
 
-import ownLib.tools.Coordinate
 import ownLib.maze.tools.Conversion
+
 import scala.collection.mutable.ArrayBuffer
 import scala.util.control.Breaks._
 
@@ -20,8 +20,8 @@ object MazeSolver {
 
     queue += departureKey
     breakable {
-      while (!queue.isEmpty) {
-        actualNodeKey = queue.dequeue
+      while (queue.nonEmpty) {
+        actualNodeKey = queue.dequeue()
         markedNode += actualNodeKey
 
         if (actualNodeKey == arrivalKey) {
@@ -30,7 +30,7 @@ object MazeSolver {
             idZoneFather = fathers(idZoneFather)
             path += idZoneFather
           }
-          break
+          break()
         }
 
         for (i <- graph.getSuccessors(actualNodeKey)) {
