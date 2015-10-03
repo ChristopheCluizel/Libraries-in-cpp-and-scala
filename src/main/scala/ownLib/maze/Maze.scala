@@ -1,38 +1,33 @@
 package ownLib.maze
 
-import ownLib.tools.Coordinate
+import java.io.{BufferedReader, BufferedWriter, FileReader, FileWriter}
+
 import ownLib.graph.graphList.Graph
-import java.io.FileWriter
-import java.io.BufferedWriter
-import java.io.BufferedReader
-import java.io.FileReader
-import ownLib.tools.Coordinate
-import ownLib.tools.Coordinate
 import ownLib.tools.Coordinate
 
 /**
- *  Maze is a class to represent a maze with a graph design.
+ * Maze is a class to represent a maze with a graph design.
  */
 class Maze(val graph: Graph[Int], val departure: Coordinate, val arrival: Coordinate, val width: Int, val height: Int, val name: String = "maze") {
+
+  /**
+   * Save the maze in a text file.
+   *
+   * @param filePath The file path where the maze will be stored.
+   *
+   *                 The name of the file will be the name of the maze.
+   */
+  def save(filePath: String = "") = {
+    val writer = new BufferedWriter(new FileWriter(filePath + name))
+    writer.write(toString)
+    writer.close()
+  }
 
   override def toString: String = {
     name + " " + width + " " + height + "\n" +
       departure.x + " " + departure.y + "\n" +
       arrival.x + " " + arrival.y + "\n" +
       graph.toString()
-  }
-
-  /**
-   * Save the maze in a text file.
-   *
-   * @param filePath The file path where will be stored the maze.
-   *
-   * The name of the file will be the name of the maze.
-   */
-  def save(filePath: String = "") = {
-    val writer = new BufferedWriter(new FileWriter(filePath + name))
-    writer.write(toString)
-    writer.close()
   }
 }
 

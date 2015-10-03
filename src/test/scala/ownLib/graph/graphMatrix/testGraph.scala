@@ -21,8 +21,8 @@ class testGraph extends FlatSpec with Matchers {
   }
 
   it should "add edges" in {
-    graph.adjacenceMatrix(0)(1) should be(1)
-    graph.adjacenceMatrix(2)(3) should be(1)
+    graph.adjacencyMatrix(0)(1) should be(1)
+    graph.adjacencyMatrix(2)(3) should be(1)
   }
 
   it should "indicate if empty" in {

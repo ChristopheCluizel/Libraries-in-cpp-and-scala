@@ -1,27 +1,26 @@
 package ownLib.graph.graphList
 
+import java.io.{BufferedReader, BufferedWriter, FileReader, FileWriter}
+
 import scala.collection.mutable.ArrayBuffer
-import java.io.BufferedReader
-import java.io.FileReader
-import java.io.FileWriter
-import java.io.BufferedWriter
 
 /**
- * Graph is a class which represents a graph structure. Its implementation is based on an adjacence list which is less heavy than an adjacence matrix. One can use whatever kind of node with Graph.
+ * Graph is a class which represents a graph structure. Its implementation is based on an adjacency list which is less heavy than an adjacency matrix. One can use whatever kind of node with Graph.
  *
  * @author christophe
  *
  * @param name The name of the graph.
- * @param <T> Enable any kind of node.
+ * @tparam T Enable any kind of node.
  */
+
 class Graph[T](val name: String = "graph") {
 
   var numberOfEdges = 0
 
   /**
-   * Implementation of the adjacence list. The key corresponds to the key of a father node and the value to an array containing the key of the successor nodes of this father node.
+   * Implementation of the adjacency list. The key corresponds to the key of a father node and the value to an array containing the key of the successor nodes of this father node.
    */
-  var adjacence: Map[Int, ArrayBuffer[Int]] = Map()
+  var adjacency: Map[Int, ArrayBuffer[Int]] = Map()
 
   /**
    * Nodes is a list of all the nodes of the graph. It associates a key to any kind of node T.
@@ -37,19 +36,8 @@ class Graph[T](val name: String = "graph") {
   def addNode(key: Int, node: T) = {
     if (!nodes.contains(key)) {
       nodes += (key -> node)
-      adjacence += (key -> new ArrayBuffer())
+      adjacency += (key -> new ArrayBuffer())
     }
-  }
-
-  /**
-   * Remove a node of the graph.
-   *
-   * @param key The key of the node to remove.
-   */
-  def removeNode(key: Int) = {
-    nodes -= key
-    adjacence -= key
-    for (i <- adjacence.keys) if (adjacence(i).contains(key)) adjacence(i) -= key
   }
 
   /**
@@ -60,8 +48,8 @@ class Graph[T](val name: String = "graph") {
    * @param value Not used yet.
    */
   def addEdge(key1: Int, key2: Int, value: Int) = {
-    if (!adjacence(key1).contains(key2)) {
-      adjacence(key1) += (key2)
+    if (!adjacency(key1).contains(key2)) {
+      adjacency(key1) += key2
       numberOfEdges += 1
     }
   }
@@ -73,7 +61,7 @@ class Graph[T](val name: String = "graph") {
    * @param key2 The key of the second node.
    */
   def removeEdge(key1: Int, key2: Int) = {
-    if (adjacence(key1).contains(key2)) adjacence(key1) -= key2
+    if (adjacency(key1).contains(key2)) adjacency(key1) -= key2
     numberOfEdges -= 1
   }
 
@@ -82,7 +70,7 @@ class Graph[T](val name: String = "graph") {
    *
    * @return Return whether the graph is empty or not.
    */
-  def isEmpty: Boolean = adjacence.isEmpty
+  def isEmpty: Boolean = adjacency.isEmpty
 
   /**
    * Indicate if a node is present in the graph.
@@ -90,7 +78,7 @@ class Graph[T](val name: String = "graph") {
    * @param key The key of the node considered.
    * @return Return whether the node is present or not.
    */
-  def nodePresent(key: Int): Boolean = adjacence.contains(key)
+  def nodePresent(key: Int): Boolean = adjacency.contains(key)
 
   /**
    * Indicate if an edge is present between two nodes in the graph.
@@ -99,7 +87,7 @@ class Graph[T](val name: String = "graph") {
    * @param key2 The key of the second node.
    * @return Return whether the edge is present or not.
    */
-  def edgePresent(key1: Int, key2: Int): Boolean = adjacence(key1).contains(key2)
+  def edgePresent(key1: Int, key2: Int): Boolean = adjacency(key1).contains(key2)
 
   /**
    * Indicate the number of nodes in the graph.
@@ -111,40 +99,31 @@ class Graph[T](val name: String = "graph") {
   }
 
   /**
-   * Get the keys of the nodes which are the predecessors of another one.
-   *
-   * @param key The key of the node whose one wants the predecessors.
-   * @return The keys of the predecessor nodes.
-   */
-  def getPredecessors(key: Int): ArrayBuffer[Int] = {
-    var predecessors: ArrayBuffer[Int] = ArrayBuffer()
-    for (i <- adjacence.keys) {
-      if (adjacence(i).contains(key)) {
-        predecessors += i
-      }
-    }
-    predecessors
-  }
-
-  /**
-   * Get the keys of the nodes which are the successors of another one.
-   *
-   * @param key The key of the node whose one wants the successors.
-   * @return The keys of the successor nodes.
-   */
-  def getSuccessors(key: Int): ArrayBuffer[Int] = adjacence(key)
-
-  /**
    * Save the graph in a text file.
    *
    * @param filePath The file path where will be stored the graph.
    *
-   * The name of the file will be the name of the graph with the extension ".dot".
+   *                 The name of the file will be the name of the graph with the extension ".dot".
    */
   def save(filePath: String = "") = {
     val writer = new BufferedWriter(new FileWriter(filePath + name + ".dot"))
     writer.write(toString)
     writer.close()
+  }
+
+  /**
+   * Redefine the toString method to describe a graph.
+   */
+  override def toString: String = {
+    var string = numberOfEdges.toString + "\n" +
+      "graph " + name + " {\n"
+    adjacency.keys.foreach { i =>
+      for (j <- adjacency(i).indices) {
+        string += i.toString + " -> " + adjacency(i)(j).toString + "\n"
+      }
+    }
+    string += "}"
+    string
   }
 
   /**
@@ -160,8 +139,8 @@ class Graph[T](val name: String = "graph") {
     var listNodesVisited = ""
 
     queue += key
-    while (!queue.isEmpty) {
-      actualNodeKey = queue.dequeue
+    while (queue.nonEmpty) {
+      actualNodeKey = queue.dequeue()
       markedNode += actualNodeKey
       listNodesVisited += actualNodeKey.toString + ", "
       // treat actual node here
@@ -172,6 +151,14 @@ class Graph[T](val name: String = "graph") {
   }
 
   /**
+   * Get the keys of the nodes which are the successors of another one.
+   *
+   * @param key The key of the node whose one wants the successors.
+   * @return The keys of the successor nodes.
+   */
+  def getSuccessors(key: Int): ArrayBuffer[Int] = adjacency(key)
+
+  /**
    * Calculate the eccentricity of a node. The eccentricity is the longest distance between a node and all the other ones.
    *
    * @param key The key of the node whose one wants to calculate the eccentricity.
@@ -179,17 +166,16 @@ class Graph[T](val name: String = "graph") {
    */
   def calculateEccentricityOf(key: Int): Int = {
     var queue = new scala.collection.mutable.Queue[Int]
-    var markedNode: ArrayBuffer[Int] = ArrayBuffer()
     var actualNodeKey = 0
     var eccentricity = 0
     var distances: scala.collection.mutable.Map[Int, Int] = scala.collection.mutable.Map()
 
-    adjacence.keys.foreach(i => distances += (i -> -1))
+    adjacency.keys.foreach(i => distances += (i -> -1))
 
     distances.update(key, 0)
     queue += key
-    while (!queue.isEmpty) {
-      actualNodeKey = queue.dequeue
+    while (queue.nonEmpty) {
+      actualNodeKey = queue.dequeue()
       for (i <- getSuccessors(actualNodeKey)) if (distances(i) == -1) {
         queue += i
         distances.update(i, distances(actualNodeKey) + 1)
@@ -202,32 +188,47 @@ class Graph[T](val name: String = "graph") {
   /**
    * Delete all the leaves of the graph. A leaf is a node which doesn't have any successors. This method has sense only for an oriented-graph.
    */
-  def shedTheLeaves() = for (i <- adjacence.keys) if (getSuccessors(i).isEmpty) removeNode(i)
+  def shedTheLeaves() = for (i <- adjacency.keys) if (getSuccessors(i).isEmpty) removeNode(i)
 
   /**
-   *  Redefine the toString method to describe a graph.
+   * Remove a node of the graph.
+   *
+   * @param key The key of the node to remove.
    */
-  override def toString: String = {
-    var string = numberOfEdges.toString() + "\n" +
-      "graph " + name + " {\n"
-    adjacence.keys.foreach { i =>
-      for (j <- 0 until adjacence(i).size) {
-        string += i.toString() + " -> " + adjacence(i)(j).toString() + "\n"
-      }
-    }
-    string += "}"
-    string
+  def removeNode(key: Int) {
+    nodes -= key
+    adjacency -= key
+    for (i <- adjacency.keys) if (adjacency(i).contains(key)) adjacency(i) -= key
   }
 
   /**
    * Display all the graph. Each node is displayed with its key, predecessors and successors.
    */
   // $COVERAGE-OFF$
-  def display = adjacence.keys.foreach { i =>
-    println("key : " + i + ", Node : " + adjacence(i).toString +
-      ", Successors : " + getSuccessors(i).mkString(", ") +
-      ", Predecessors : " + getPredecessors(i).mkString(", "))
+  def display() {
+    adjacency.keys.foreach { i =>
+      println("key : " + i + ", Node : " + adjacency(i).toString +
+        ", Successors : " + getSuccessors(i).mkString(", ") +
+        ", Predecessors : " + getPredecessors(i).mkString(", "))
+    }
   }
+
+  /**
+   * Get the keys of the nodes which are the predecessors of another one.
+   *
+   * @param key The key of the node whose one wants the predecessors.
+   * @return The keys of the predecessor nodes.
+   */
+  def getPredecessors(key: Int): ArrayBuffer[Int] = {
+    var predecessors: ArrayBuffer[Int] = ArrayBuffer()
+    for (i <- adjacency.keys) {
+      if (adjacency(i).contains(key)) {
+        predecessors += i
+      }
+    }
+    predecessors
+  }
+
   // $COVERAGE-ON$
 }
 
@@ -243,7 +244,7 @@ object Graph {
     val reader = new BufferedReader(new FileReader(fileName))
     val nbEdges = reader.readLine.toInt
     val firstLine = reader.readLine
-    val result = firstLine.split(" ");
+    val result = firstLine.split(" ")
     val graphName = result(1)
 
     val graph = new Graph[Int](graphName)

@@ -19,20 +19,20 @@ class testGraph extends FlatSpec with Matchers {
 
   "A Graph with adjacent list" should "add a node" in {
     val oriented_graph = new Graph[Int]
-    oriented_graph.adjacence.size should be(0)
+    oriented_graph.adjacency.size should be(0)
     oriented_graph.addNode(2, 2)
-    oriented_graph.adjacence.size should be(1)
+    oriented_graph.adjacency.size should be(1)
     oriented_graph.nodes(2) should be(2)
   }
 
   it should "remove a node" in {
     val f = fixture_oriented_graph
-    f.oriented_graph.adjacence.contains(2) should be(true)
+    f.oriented_graph.adjacency.contains(2) should be(true)
     f.oriented_graph.nodes.contains(2) should be(true)
 
     f.oriented_graph.removeNode(2)
 
-    f.oriented_graph.adjacence.contains(2) should be(false)
+    f.oriented_graph.adjacency.contains(2) should be(false)
     f.oriented_graph.nodes.contains(2) should be(false)
     f.oriented_graph.getPredecessors(3).isEmpty should be(true)
     f.oriented_graph.getPredecessors(0).isEmpty should be(true)
@@ -44,7 +44,7 @@ class testGraph extends FlatSpec with Matchers {
     oriented_graph.addNode(1, 1)
     oriented_graph.addNode(2, 2)
     oriented_graph.addEdge(1, 2, 1)
-    oriented_graph.adjacence(1)(0) should be(2)
+    oriented_graph.adjacency(1)(0) should be(2)
   }
 
   it should "remove an edge" in {
@@ -70,7 +70,7 @@ class testGraph extends FlatSpec with Matchers {
 
   it should "indicate if node present" in {
     val f = fixture_oriented_graph
-    f.oriented_graph.adjacence.size should be(4)
+    f.oriented_graph.adjacency.size should be(4)
     f.oriented_graph.nodePresent(0) should be(true)
     f.oriented_graph.nodePresent(1) should be(true)
     f.oriented_graph.nodePresent(2) should be(true)
