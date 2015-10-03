@@ -31,15 +31,17 @@ object Conversion {
     val nbRows = matrix.length
     val nbColumns = matrix(0).length
     val graph = new Graph[Int]
+
     for (i <- 0 until nbRows; j <- 0 until nbColumns) {
       val actualCoord = new Coordinate(j, i)
       val actualKey = coordinateToKey(actualCoord, nbColumns)
       graph.addNode(actualKey, 1)
-      val neighbourKeys = findNeighbours(matrix, nbRows, nbColumns, actualCoord)
-      neighbourKeys.foreach { key =>
-        graph.addNode(key, 1)
-        graph.addEdge(actualKey, key, 1)
-        graph.addEdge(key, actualKey, 1)
+      if (matrix(i)(j) == 0) {
+        val neighbourKeys = findNeighbours(matrix, nbRows, nbColumns, actualCoord)
+        neighbourKeys.foreach { key =>
+          graph.addNode(key, 1)
+          graph.addEdge(actualKey, key, 1)
+        }
       }
     }
     graph
