@@ -1,5 +1,11 @@
 package ownLib.maze.tools
 
+import ownLib.graph.graphList.Graph
+import ownLib.tools.Coordinate
+import scala.collection.mutable.ArrayBuffer
+import scala.math.{ max, min }
+import ownLib.tools.Coordinate
+import ownLib.tools.Coordinate
 import ownLib.tools.Coordinate
 
 /**
@@ -26,4 +32,37 @@ object Conversion {
    * @see Coordinate
    */
   def coordinateToKey(coordinate: Coordinate, mazeWidth: Int): Int = mazeWidth * coordinate.y + coordinate.x
+
+  def matrixToGraph(matrix: Array[Array[Int]]): Graph[Int] = {
+    val nbRows = matrix.length
+    val nbColumns = matrix(0).length
+    val graph = new Graph[Int]
+    for (i <- 0 until nbRows; j <- 0 until nbColumns) {
+      val actualCoord = new Coordinate(j, i)
+      val actualKey = coordinateToKey(actualCoord, nbColumns)
+      graph.addNode(actualKey, 1)
+      val neighbourKeys = findNeighbours(matrix, nbRows, nbColumns, actualCoord)
+      neighbourKeys.foreach { key =>
+        graph.addNode(key, 1)
+        graph.addEdge(actualKey, key, 1)
+        graph.addEdge(key, actualKey, 1)
+      }
+    }
+    graph
+  }
+
+  private def findNeighbours(matrix: Array[Array[Int]], nbRows: Int, nbColumns: Int, square: Coordinate): ArrayBuffer[Int] = {
+    val fourNeighbourCoordinates = ArrayBuffer[Coordinate]()
+    val neighbourKeys = ArrayBuffer[Int]()
+
+    fourNeighbourCoordinates += new Coordinate(square.x, max(0, square.y - 1))
+    fourNeighbourCoordinates += new Coordinate(square.x, min(nbRows - 1, square.y + 1))
+    fourNeighbourCoordinates += new Coordinate(max(0, square.x - 1), square.y)
+    fourNeighbourCoordinates += new Coordinate(min(square.x + 1, nbColumns - 1), square.y)
+
+    for (coord <- fourNeighbourCoordinates) {
+      if (matrix(coord.x)(coord.y) == 1 && !(coord == square)) neighbourKeys += coordinateToKey(coord, nbColumns)
+    }
+    neighbourKeys
+  }
 }
